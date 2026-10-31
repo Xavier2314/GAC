@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" type="image/png" href="logo.png">
+<title>Goal Achievers</title>
+<meta name="description" content="Goal Achievers: a community of driven people. Senior Managers' Retreat, 27–29 November 2026, Abeokuta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Figtree:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout: espresso "stage" bands alternating with warm paper bands, joined by dune-wave dividers, like the retreat flyer. Single committed brand look. */
+:root{
+  --ink:#1c130e; --ink-2:#2a1c14; --ink-3:#3a281c;
+  --gold:#e5a930; --gold-soft:#f3cf7a; --copper:#8c5a2b; --copper-2:#6b4220;
+  --paper:#f6ede1; --card:#fffaf3; --line:#e2d3bf;
+  --on-ink:#f8efe2; --on-ink-dim:#c7b29a; --on-paper:#22170f; --on-paper-dim:#6a5644;
+  --r-orange:#f07b1f; --r-red:#cf2a36; --r-green:#2f8a41; --r-blue:#2366c9;
+  --f-display:"Archivo Black","Arial Black",Impact,sans-serif;
+  --f-serif:"Instrument Serif","Times New Roman",Georgia,serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --gutter-l:max(16px,env(safe-area-inset-left,0px));
+  --gutter-r:max(16px,env(safe-area-inset-right,0px));
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--on-ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--ink)}
+a{color:inherit}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.05}
+p{margin:0}
+.wrap{max-width:1160px;margin:0 auto;padding-left:var(--gutter-l);padding-right:var(--gutter-r)}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.serif{font-family:var(--f-serif);font-style:italic;font-weight:400}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:6px}
+
+/* ---------- Header ---------- */
+.site-head{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--ink) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--ink-3)}
+.head-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:10px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand-name{font-family:var(--f-display);font-size:18px;letter-spacing:.01em;line-height:1}
+.brand-name small{display:block;font-family:var(--f-body);font-weight:600;font-size:10px;letter-spacing:.26em;color:var(--gold);margin-top:5px}
+.nav{display:flex;align-items:center;gap:4px}
+.nav a,.nav button{font:600 14px/1 var(--f-body);color:var(--on-ink-dim);background:none;border:0;padding:10px 12px;border-radius:999px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:color .2s,background .2s}
+.nav a:hover,.nav button:hover{color:var(--on-ink);background:var(--ink-2)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--gold)}
+.nav .soon-dot{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid color-mix(in srgb,var(--gold) 50%,transparent);border-radius:999px;padding:3px 6px}
+.nav .cta{color:var(--ink);background:linear-gradient(135deg,var(--gold-soft),var(--gold));margin-left:6px}
+.nav .cta:hover{color:var(--ink);background:var(--gold-soft)}
+.menu-btn{display:none;background:var(--ink-2);border:1px solid var(--ink-3);color:var(--on-ink);border-radius:12px;width:44px;height:44px;cursor:pointer}
+.menu-btn span{display:block;width:18px;height:2px;background:currentColor;margin:4px auto;border-radius:2px;transition:transform .25s,opacity .25s}
+@media (max-width:920px){
+  .menu-btn{display:block}
+  .nav{position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:2px;background:var(--ink);border-bottom:1px solid var(--ink-3);padding:8px var(--gutter-r) 16px var(--gutter-l);display:none}
+  .nav.open{display:flex}
+  .nav a,.nav button{padding:14px 14px;font-size:16px;justify-content:space-between}
+  .nav .cta{margin:8px 0 0;justify-content:center}
+  .menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .menu-btn[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+}
+
+/* ---------- Animated logo ---------- */
+.logo-orb{--size:220px;position:relative;width:var(--size);height:var(--size);flex:none;display:grid;place-items:center;max-width:100%}
+.logo-orb .ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,var(--gold),var(--r-orange),var(--r-red),#a23bb5,var(--r-blue),var(--r-green),var(--gold-soft),var(--gold));animation:spin 6s linear infinite;filter:saturate(1.15)}
+.logo-orb .glow{position:absolute;inset:-14%;border-radius:50%;background:inherit;background:conic-gradient(from 0deg,var(--gold),var(--r-orange),var(--r-red),#a23bb5,var(--r-blue),var(--r-green),var(--gold));filter:blur(28px);opacity:.55;animation:spin 6s linear infinite,breathe 3.2s ease-in-out infinite}
+.logo-orb .face{position:relative;width:88%;height:88%;border-radius:50%;background:#fff url("logo.png") center/108% no-repeat;box-shadow:inset 0 0 0 3px rgba(0,0,0,.08),0 10px 30px rgba(0,0,0,.35);animation:float 5s ease-in-out infinite}
+.logo-orb .face::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.75) 48%,transparent 60%);background-size:250% 100%;animation:shine 4.5s ease-in-out infinite;mix-blend-mode:soft-light}
+.logo-orb .orbit{position:absolute;inset:-8%;animation:spin 9s linear infinite reverse}
+.logo-orb .orbit i{position:absolute;width:10px;height:10px;border-radius:50%;box-shadow:0 0 12px currentColor;background:currentColor}
+.logo-orb .orbit i:nth-child(1){top:0;left:50%;color:var(--gold-soft)}
+.logo-orb .orbit i:nth-child(2){bottom:8%;left:8%;color:var(--r-orange);width:8px;height:8px}
+.logo-orb .orbit i:nth-child(3){bottom:8%;right:8%;color:var(--r-blue);width:7px;height:7px}
+.logo-orb .orbit i:nth-child(4){top:46%;right:-1%;color:var(--r-green);width:6px;height:6px}
+.logo-orb .orbit i:nth-child(5){top:40%;left:-1%;color:var(--r-red);width:6px;height:6px}
+.logo-orb.sm{--size:46px}
+.logo-orb.sm .glow{filter:blur(8px);opacity:.6}
+.logo-orb.sm .face{width:86%;height:86%;animation:none;box-shadow:none}
+.logo-orb.sm .orbit{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{50%{opacity:.85}}
+@keyframes float{50%{transform:translateY(-6px) scale(1.02)}}
+@keyframes shine{0%,55%{background-position:150% 0}100%{background-position:-60% 0}}
+
+/* ---------- Views ---------- */
+.view{animation:viewIn .45s ease both}
+@keyframes viewIn{from{opacity:.4;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.stage{position:relative;overflow:hidden;background:radial-gradient(120% 80% at 85% 0%,color-mix(in srgb,var(--copper) 45%,transparent),transparent 60%),var(--ink)}
+.stage::before{content:"";position:absolute;inset:0;background-image:radial-gradient(color-mix(in srgb,var(--gold) 22%,transparent) 1px,transparent 1.4px);background-size:26px 26px;mask-image:linear-gradient(180deg,#000,transparent 75%);-webkit-mask-image:linear-gradient(180deg,#000,transparent 75%);pointer-events:none}
+.dunes{display:block;width:100%;height:90px;margin-top:-1px}
+.dunes.flip{transform:scaleY(-1)}
+.paper{background:var(--paper);color:var(--on-paper)}
+.paper .eyebrow{color:var(--copper)}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:40px;padding-block:72px 24px;position:relative}
+.hero h1{font-family:var(--f-display);font-size:clamp(44px,8vw,96px);letter-spacing:-.01em;line-height:.95}
+.hero h1 .serif{display:block;font-size:.62em;color:var(--on-ink);letter-spacing:0;margin-bottom:.08em}
+.hero h1 .gold{color:var(--gold)}
+.hero p.lede{font-size:clamp(17px,2vw,20px);color:var(--on-ink-dim);max-width:52ch;margin-top:22px}
+.hero .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hero .logo-orb{--size:min(340px,70vw);justify-self:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 15px/1 var(--f-body);padding:16px 22px;border-radius:999px;text-decoration:none;cursor:pointer;border:2px solid transparent;transition:transform .2s,box-shadow .2s,background .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-gold{background:linear-gradient(135deg,var(--gold-soft),var(--gold));color:var(--ink);box-shadow:0 10px 30px color-mix(in srgb,var(--gold) 35%,transparent)}
+.btn-ghost{border-color:var(--ink-3);color:var(--on-ink);background:var(--ink-2)}
+.btn-dark{background:var(--ink);color:var(--on-ink)}
+.btn svg{width:18px;height:18px}
+@media (max-width:820px){.hero{grid-template-columns:1fr;padding-block:40px 8px;text-align:left}.hero .logo-orb{order:-1;--size:min(240px,62vw)}}
+
+/* Featured event strip */
+.feature{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center;background:linear-gradient(120deg,var(--ink-2),var(--ink-3));border:1px solid color-mix(in srgb,var(--gold) 30%,transparent);border-radius:24px;padding:26px 28px;margin-block:28px 8px;position:relative;overflow:hidden}
+.feature::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(color-mix(in srgb,var(--gold) 35%,transparent),transparent 70%)}
+.feature .date-chip{background:var(--gold);color:var(--ink);border-radius:16px;padding:12px 16px;text-align:center;font-family:var(--f-display);line-height:1}
+.feature .date-chip b{display:block;font-size:30px}
+.feature .date-chip span{font-family:var(--f-body);font-weight:700;font-size:12px;letter-spacing:.2em}
+.feature h3{font-family:var(--f-display);font-size:22px}
+.feature p{color:var(--on-ink-dim);font-size:15px;margin-top:6px}
+.feature > *{position:relative;z-index:1;min-width:0}
+@media (max-width:760px){.feature{grid-template-columns:1fr;gap:16px}.feature .date-chip{justify-self:start}}
+
+/* Sections */
+.section{padding-block:72px}
+.section-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:36px}
+.section-head h2{font-family:var(--f-display);font-size:clamp(30px,4.6vw,52px);margin-top:10px}
+.section-head h2 .serif{font-size:1.08em}
+.section-head p{max-width:46ch;color:var(--on-paper-dim)}
+.stage .section-head p{color:var(--on-ink-dim)}
+
+/* Logo meaning grid */
+.meaning{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.meaning article{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.meaning .ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:#fff}
+.meaning h3{font-family:var(--f-display);font-size:19px}
+.meaning p{color:var(--on-paper-dim);font-size:15px}
+@media (max-width:980px){.meaning{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.meaning{grid-template-columns:1fr}}
+
+/* Quick links */
+.quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.quick a,.quick button{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:8px;padding:24px;border-radius:20px;background:var(--ink-2);border:1px solid var(--ink-3);transition:border-color .2s,transform .2s}
+.quick a:hover,.quick button:hover{border-color:var(--gold);transform:translateY(-3px)}
+.quick a:focus-visible,.quick button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.quick h3{font-family:var(--f-display);font-size:20px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.quick p{color:var(--on-ink-dim);font-size:15px}
+.tag{font:700 10px/1 var(--f-body);letter-spacing:.16em;text-transform:uppercase;padding:6px 9px;border-radius:999px;background:color-mix(in srgb,var(--gold) 18%,transparent);color:var(--gold-soft);white-space:nowrap}
+.tag.live{background:color-mix(in srgb,var(--r-green) 30%,transparent);color:#9be3a8}
+@media (max-width:820px){.quick{grid-template-columns:1fr}}
+
+/* About */
+.about-hero{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center;padding-block:64px 24px}
+.about-hero h1{font-family:var(--f-display);font-size:clamp(38px,6vw,72px)}
+.about-hero p{color:var(--on-ink-dim);font-size:18px;max-width:58ch;margin-top:18px}
+@media (max-width:760px){.about-hero{grid-template-columns:1fr;gap:28px}.about-hero .logo-orb{--size:180px}}
+.prose{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.prose p{font-size:17px;color:var(--on-paper-dim);margin-bottom:14px}
+.prose p:first-child::first-letter{font-family:var(--f-serif);font-style:italic;font-size:3.4em;float:left;line-height:.85;margin:6px 10px 0 0;color:var(--copper)}
+.prose blockquote{margin:0;font-family:var(--f-serif);font-style:italic;font-size:clamp(28px,3.6vw,40px);line-height:1.15;color:var(--on-paper);border-left:4px solid var(--gold);padding-left:24px;align-self:start}
+.prose blockquote footer{font:600 12px/1 var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:var(--copper);margin-top:18px;font-style:normal}
+@media (max-width:820px){.prose{grid-template-columns:1fr;gap:28px}}
+.values{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;background:var(--ink-3);border-radius:22px;overflow:hidden;border:1px solid var(--ink-3)}
+.values div{background:var(--ink-2);padding:28px 24px}
+.values b{font-family:var(--f-display);font-size:26px;color:var(--gold);display:block}
+.values span{color:var(--on-ink-dim);font-size:15px}
+@media (max-width:820px){.values{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:440px){.values{grid-template-columns:1fr}}
+
+/* Event */
+.ev-hero{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center;padding-block:56px 20px}
+.ev-hero .kicker{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:8px;font:700 12px/1 var(--f-body);letter-spacing:.18em;text-transform:uppercase;padding:9px 14px;border-radius:999px;border:1.5px solid var(--gold);color:var(--gold)}
+.pill.solid{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.pill .pulse{width:8px;height:8px;border-radius:50%;background:#5fe07a;box-shadow:0 0 0 0 #5fe07a;animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.ev-title{margin-top:22px}
+.ev-title .serif{display:block;font-size:clamp(36px,6vw,68px);line-height:1}
+.ev-title .big{display:block;font-family:var(--f-display);font-size:clamp(64px,13vw,150px);line-height:.9;letter-spacing:-.01em;background:linear-gradient(180deg,var(--gold-soft),var(--gold) 55%,#c4861d);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ev-tag{display:flex;align-items:center;gap:14px;margin-top:18px;font-size:clamp(17px,2vw,21px);font-weight:500}
+.ev-tag::before{content:"";width:44px;height:2px;background:var(--gold);flex:none}
+.ev-r{margin-top:10px;font-weight:700;letter-spacing:.24em;font-size:12px;color:var(--on-ink-dim);text-transform:uppercase}
+.ev-side{display:flex;flex-direction:column;align-items:center;gap:22px}
+.ev-side .logo-orb{--size:min(230px,56vw)}
+.countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%;max-width:360px}
+.countdown div{background:var(--ink-2);border:1px solid var(--ink-3);border-radius:14px;padding:12px 4px;text-align:center}
+.countdown b{display:block;font-family:var(--f-display);font-size:28px;color:var(--on-ink);font-variant-numeric:tabular-nums;line-height:1.1}
+.countdown span{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--on-ink-dim)}
+.count-label{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700}
+@media (max-width:820px){.ev-hero{grid-template-columns:1fr;gap:32px}}
+
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;background:var(--card);border:1px solid var(--line);border-radius:24px;overflow:hidden}
+.facts > div{padding:28px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px;min-width:0}
+.facts > div:last-child{border-right:0}
+.facts .lbl{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--copper)}
+.facts .lbl svg{width:18px;height:18px}
+.facts .val{font-family:var(--f-display);font-size:clamp(30px,4vw,44px);line-height:1.05;color:var(--on-paper)}
+.facts .sub{color:var(--on-paper-dim);font-size:15px}
+.facts .price .val{color:var(--copper)}
+@media (max-width:820px){.facts{grid-template-columns:1fr}.facts > div{border-right:0;border-bottom:1px solid var(--line)}.facts > div:last-child{border-bottom:0}}
+
+.deadline{display:flex;flex-wrap:wrap;align-items:center;gap:18px;justify-content:space-between;margin-top:18px;background:#fff3f1;border:1.5px solid color-mix(in srgb,var(--r-red) 40%,transparent);border-radius:20px;padding:18px 22px}
+.deadline .d-left{display:flex;align-items:center;gap:14px}
+.deadline .alarm{width:46px;height:46px;border-radius:50%;background:var(--r-red);color:#fff;display:grid;place-items:center;flex:none;animation:ring 2.4s ease-in-out infinite}
+@keyframes ring{0%,80%,100%{transform:rotate(0)}84%{transform:rotate(-12deg)}88%{transform:rotate(12deg)}92%{transform:rotate(-8deg)}96%{transform:rotate(6deg)}}
+.deadline b{display:block;font-family:var(--f-display);font-size:20px;color:var(--r-red)}
+.deadline span{color:var(--on-paper-dim);font-size:15px}
+
+.included{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.included article{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 22px;display:flex;flex-direction:column;gap:10px;transition:transform .25s,box-shadow .25s}
+.included article:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(60,35,15,.12)}
+.included .ico{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:#fff;box-shadow:0 8px 18px rgba(0,0,0,.15)}
+.included .ico svg{width:26px;height:26px}
+.included h3{font-family:var(--f-display);font-size:20px;margin-top:6px}
+.included p{color:var(--on-paper-dim);font-size:15px}
+@media (max-width:980px){.included{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.included{grid-template-columns:1fr}}
+
+.gains{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.gains div{display:flex;gap:14px;align-items:flex-start;padding:22px;border-radius:20px;background:var(--ink-2);border:1px solid var(--ink-3)}
+.gains svg{width:30px;height:30px;color:var(--gold);flex:none}
+.gains b{display:block;font-size:13px;letter-spacing:.18em;text-transform:uppercase}
+.gains span{color:var(--on-ink-dim);font-size:15px}
+@media (max-width:980px){.gains{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.gains{grid-template-columns:1fr}}
+
+.steps-wrap{display:grid;grid-template-columns:1fr .9fr;gap:48px;align-items:start}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.steps li::before{content:counter(s);width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-size:22px;background:var(--ink);color:var(--gold)}
+.steps h3{font-family:var(--f-display);font-size:18px}
+.steps p{color:var(--on-paper-dim);font-size:15px;margin-top:4px}
+.flyer{margin:0;border-radius:22px;overflow:hidden;box-shadow:0 24px 60px rgba(40,20,5,.28);transform:rotate(1.5deg);border:6px solid #fff;max-width:440px;justify-self:center}
+.flyer img{display:block;width:100%;height:auto}
+.flyer figcaption{background:#fff;color:var(--on-paper-dim);font-size:13px;padding:8px 6px 4px;text-align:center}
+@media (max-width:860px){.steps-wrap{grid-template-columns:1fr}.flyer{transform:none}}
+
+.register{position:relative;overflow:hidden;border-radius:28px;padding:48px 36px;background:radial-gradient(100% 140% at 0% 0%,color-mix(in srgb,var(--copper) 70%,transparent),transparent 60%),var(--ink-2);border:1px solid color-mix(in srgb,var(--gold) 35%,transparent);display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center}
+.register h2{font-family:var(--f-display);font-size:clamp(28px,4vw,46px)}
+.register p{color:var(--on-ink-dim);margin-top:10px;max-width:52ch}
+.register .price-tag{font-family:var(--f-display);font-size:clamp(34px,5vw,54px);color:var(--gold);line-height:1}
+.register .price-tag small{display:block;font:600 12px/1.4 var(--f-body);letter-spacing:.2em;text-transform:uppercase;color:var(--on-ink-dim);margin-top:6px}
+.register .reg-actions{display:flex;flex-direction:column;align-items:stretch;gap:12px}
+.form-link{font-size:13px;color:var(--on-ink-dim);word-break:break-all;text-align:center}
+@media (max-width:760px){.register{grid-template-columns:1fr;padding:32px 22px}}
+
+/* Contact */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.c-card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.c-card h3{font-family:var(--f-display);font-size:22px}
+.c-card p{color:var(--on-paper-dim)}
+.c-card .row{display:flex;align-items:center;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+.c-card .row:first-of-type{border-top:0}
+.c-card .row svg{width:22px;height:22px;color:var(--copper);flex:none}
+.c-card .row b{display:block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper)}
+.c-card .row span{color:var(--on-paper);word-break:break-word}
+.c-card .row .pending{color:var(--on-paper-dim);font-style:italic}
+.c-card.dark{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.c-card.dark p{color:var(--on-ink-dim)}
+.copy{margin-left:auto;font:600 12px/1 var(--f-body);background:var(--paper);border:1px solid var(--line);color:var(--on-paper);padding:8px 10px;border-radius:999px;cursor:pointer}
+@media (max-width:820px){.contact-grid{grid-template-columns:1fr}}
+
+/* Footer */
+.foot{background:var(--ink);border-top:1px solid var(--ink-3);padding-block:40px}
+.foot-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px}
+.foot .sig{font-family:var(--f-serif);font-style:italic;font-size:30px}
+.foot small{color:var(--on-ink-dim);letter-spacing:.2em;text-transform:uppercase;font-weight:700;font-size:11px}
+.foot nav{display:flex;flex-wrap:wrap;gap:6px 18px}
+.foot nav a,.foot nav button{font:500 14px var(--f-body);color:var(--on-ink-dim);background:none;border:0;padding:0;cursor:pointer;text-decoration:none}
+.foot nav a:hover,.foot nav button:hover{color:var(--gold)}
+
+/* Coming soon modal */
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px var(--gutter-r) 24px var(--gutter-l);background:rgba(12,8,5,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.modal-card{position:relative;width:min(460px,100%);background:var(--paper);color:var(--on-paper);border-radius:28px;overflow:hidden;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{transform:scale(.85) translateY(20px);opacity:0}}
+.tape{height:26px;background:repeating-linear-gradient(-45deg,var(--gold) 0 18px,var(--ink) 18px 36px);background-size:51px 26px;animation:tape 1.2s linear infinite}
+@keyframes tape{to{background-position:51px 0}}
+.modal-body{padding:30px 28px 30px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.modal-body .logo-orb{--size:120px;margin-bottom:6px}
+.modal-body .eyebrow{color:var(--copper)}
+.modal-body h2{font-family:var(--f-display);font-size:34px}
+.modal-body h2 .serif{color:var(--copper)}
+.modal-body p{color:var(--on-paper-dim);max-width:34ch}
+.bar{width:100%;max-width:280px;height:10px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;width:40%;border-radius:inherit;background:linear-gradient(90deg,var(--gold),var(--r-orange),var(--r-red));animation:load 1.8s ease-in-out infinite}
+@keyframes load{0%{transform:translateX(-100%)}100%{transform:translateX(260%)}}
+.modal-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px}
+.x{position:absolute;top:36px;right:14px;width:38px;height:38px;border-radius:50%;border:0;background:var(--card);color:var(--on-paper);font-size:20px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-naira" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20V4l10 16V4M4 10h16M4 14h16"/></symbol>
+    <symbol id="i-train" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M7 12l3-3 2 2 4-4M8 20h8M12 16v4"/></symbol>
+    <symbol id="i-mount" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20l6-11 4 7 2-3 6 7z"/><circle cx="17" cy="6" r="2"/></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3"/><circle cx="5" cy="9" r="2"/><circle cx="19" cy="9" r="2"/><path d="M7 20v-2a5 5 0 0 1 10 0v2M2 19v-1a3 3 0 0 1 4-2.8M22 19v-1a3 3 0 0 0-4-2.8"/></symbol>
+    <symbol id="i-fork" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a2 2 0 0 0 2 2v9M10 3v7a2 2 0 0 1-2 2M8 3v6M17 21V3c-2 1-3 4-3 7s1 4 3 4"/></symbol>
+    <symbol id="i-lotus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20c-4 0-8-2-9-6 3-1 6 0 9 3 3-3 6-4 9-3-1 4-5 6-9 6z"/><path d="M12 17c-2-2-3-5-2-9 1 1 2 1 2 1s1 0 2-1c1 4 0 7-2 9z"/></symbol>
+    <symbol id="i-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V12h4v8zM10 20V8h4v12zM16 20V4h4v16zM2 20h20"/></symbol>
+    <symbol id="i-net" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="17" r="2.5"/><circle cx="19" cy="17" r="2.5"/><path d="M10.5 7L6.5 15M13.5 7l4 8M7.5 17h9"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-8-4.8-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 6.2-8 11-8 11z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+    <symbol id="i-alarm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7"/><path d="M12 10v3l2 2M5 3L2 6M19 3l3 3"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.5L3 21l2-5.6A8.5 8.5 0 1 1 21 11.5z"/></symbol>
+    <symbol id="i-form" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3 8-10V5l-8-3-8 3v7c0 7 8 10 8 10z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6.5 7 .9-5.1 4.8 1.3 7L12 17.8 5.8 21.2l1.3-7L2 9.4l7-.9z"/></symbol>
+    <symbol id="i-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="4" r="1.5" fill="currentColor"/><circle cx="4" cy="12" r="1.5" fill="currentColor"/><circle cx="20" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="20" r="1.5" fill="currentColor"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  </defs>
+</svg>
+
+<header class="site-head">
+  <div class="wrap head-row">
+    <a class="brand" href="#home" aria-label="Goal Achievers home">
+      <span class="logo-orb sm" aria-hidden="true"><span class="glow"></span><span class="ring"></span><span class="face"></span></span>
+      <span class="brand-name">Goal Achievers<small>Rise · Together</small></span>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav"><span></span><span></span><span></span></button>
+    <nav class="nav" id="siteNav" aria-label="Main">
+      <a href="#home" data-link="home">Home</a>
+      <a href="#about" data-link="about">About Us</a>
+      <button type="button" data-soon="Founder">Founder <span class="soon-dot">Soon</span></button>
+      <button type="button" data-soon="Vision &amp; Mission">Vision &amp; Mission <span class="soon-dot">Soon</span></button>
+      <a href="#event" data-link="event">Event</a>
+      <a href="#contact" data-link="contact">Contact Us</a>
+      <a class="cta" href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener">Register</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ================= HOME ================= -->
+<section class="view" data-view="home">
+  <div class="stage">
+    <div class="wrap">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">Welcome to Goal Achievers</p>
+          <h1 style="margin-top:16px"><span class="serif">Set the goal.</span>Rise <span class="gold">together.</span></h1>
+          <p class="lede">We are a community of driven people who set bold goals, lift one another up, and celebrate every win along the way. Our biggest gathering of the year is almost here.</p>
+          <div class="actions">
+            <a class="btn btn-gold" href="#event">See the Retreat <svg><use href="#i-arrow"/></svg></a>
+            <a class="btn btn-ghost" href="#about">About Us</a>
+          </div>
+        </div>
+        <div class="logo-orb" aria-label="Goal Achievers logo" role="img">
+          <span class="glow"></span><span class="ring"></span>
+          <span class="orbit"><i></i><i></i><i></i><i></i><i></i></span>
+          <span class="face"></span>
+        </div>
+      </div>
+
+      <a class="feature" href="#event" style="text-decoration:none;color:inherit">
+        <div class="date-chip"><b>27–29</b><span>NOV 2026</span></div>
+        <div>
+          <p class="eyebrow" style="margin-bottom:6px"><span class="tag live">Registration open</span></p>
+          <h3>Senior Managers' Retreat · Abeokuta</h3>
+          <p>Three all-inclusive days of training, sightseeing, fun and good food. ₦100,000 per person. <span id="homeCount"></span></p>
+        </div>
+        <span class="btn btn-gold">Details <svg><use href="#i-arrow"/></svg></span>
+      </a>
+    </div>
+    <svg class="dunes" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path fill="#5a3a20" d="M0 40C180 10 300 70 520 40S900 0 1100 30s260 30 340 10V90H0z"/><path fill="#8c5a2b" d="M0 60c200-30 360 20 560 0s420-40 620-10 200 20 260 10v30H0z"/><path fill="#f6ede1" d="M0 80c240-14 480 6 720-4s480-12 720 0v14H0z"/></svg>
+  </div>
+
+  <div class="paper">
+    <div class="wrap section">
+      <div class="section-head">
+        <div><p class="eyebrow">What our badge stands for</p><h2>Every mark has a <span class="serif">meaning</span></h2></div>
+        <p>Our logo tells our story: protected by community, lifted by people, reaching for a star that is always just ahead.</p>
+      </div>
+      <div class="meaning">
+        <article><span class="ico" style="background:var(--ink)"><svg width="24" height="24"><use href="#i-shield"/></svg></span><h3>The Shield</h3><p>A strong, safe circle where members are supported, protected and pushed to grow.</p></article>
+        <article><span class="ico" style="background:var(--r-orange)"><svg width="24" height="24"><use href="#i-star"/></svg></span><h3>The Shooting Star</h3><p>The goal we chase together. Once we reach one, we set our sights on the next.</p></article>
+        <article><span class="ico" style="background:var(--copper)"><svg width="24" height="24"><use href="#i-people"/></svg></span><h3>Lifting Each Other</h3><p>At the centre, people raise one another higher. No one achieves alone.</p></article>
+        <article><span class="ico" style="background:var(--r-blue)"><svg width="24" height="24"><use href="#i-circle"/></svg></span><h3>The Circle</h3><p>A united team holding hands around a shared purpose, from every walk of life.</p></article>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage" style="background:var(--ink)">
+    <div class="wrap section">
+      <div class="section-head"><div><p class="eyebrow">Explore</p><h2>Find your <span class="serif">way around</span></h2></div></div>
+      <div class="quick">
+        <a href="#event"><h3>The Retreat <span class="tag live">Live</span></h3><p>Dates, venue, price, everything included, and the registration form.</p></a>
+        <a href="#about"><h3>About Us <svg width="22" height="22"><use href="#i-arrow"/></svg></h3><p>Who Goal Achievers are and what brings us together.</p></a>
+        <a href="#contact"><h3>Contact Us <svg width="22" height="22"><use href="#i-arrow"/></svg></h3><p>Questions about the retreat or joining the community.</p></a>
+        <button type="button" data-soon="Founder"><h3>Our Founder <span class="tag">Coming soon</span></h3><p>The story of the person who started it all.</p></button>
+        <button type="button" data-soon="Vision &amp; Mission"><h3>Vision &amp; Mission <span class="tag">Coming soon</span></h3><p>Where we are headed and how we plan to get there.</p></button>
+        <a href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener"><h3>Register Now <svg width="20" height="20"><use href="#i-ext"/></svg></h3><p>Secure your seat at the Senior Managers' Retreat.</p></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="view" data-view="about" hidden>
+  <div class="stage">
+    <div class="wrap about-hero">
+      <div class="logo-orb" style="--size:240px" role="img" aria-label="Goal Achievers logo">
+        <span class="glow"></span><span class="ring"></span><span class="orbit"><i></i><i></i><i></i><i></i><i></i></span><span class="face"></span>
+      </div>
+      <div>
+        <p class="eyebrow">About Us</p>
+        <h1 style="margin-top:14px">People who <span class="serif" style="color:var(--gold)">finish</span> what they start.</h1>
+        <p>Goal Achievers is a family of ambitious men and women who believe big goals are easier to reach when you have the right people beside you.</p>
+      </div>
+    </div>
+    <svg class="dunes" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path fill="#5a3a20" d="M0 40C180 10 300 70 520 40S900 0 1100 30s260 30 340 10V90H0z"/><path fill="#8c5a2b" d="M0 60c200-30 360 20 560 0s420-40 620-10 200 20 260 10v30H0z"/><path fill="#f6ede1" d="M0 80c240-14 480 6 720-4s480-12 720 0v14H0z"/></svg>
+  </div>
+  <div class="paper">
+    <div class="wrap section">
+      <div class="prose">
+        <div>
+          <p>We started with a simple idea: when driven people come together, share what they know and hold each other accountable, everyone goes further. Today Goal Achievers brings together team members and leaders who are serious about growth in their work, their finances and their lives.</p>
+          <p>We train our leaders, celebrate our achievers, and make time to rest and reconnect. Our gatherings, like the Senior Managers' Retreat, are where learning meets friendship and where the next set of goals gets written down.</p>
+          <p>Whether you are just starting out or already leading a team, there is a place for you here.</p>
+        </div>
+        <blockquote>“No one achieves alone. We rise by lifting others.”<footer>The Goal Achievers way</footer></blockquote>
+      </div>
+    </div>
+  </div>
+  <div class="stage" style="background:var(--ink)">
+    <div class="wrap section">
+      <div class="section-head"><div><p class="eyebrow">What we live by</p><h2>Four things we <span class="serif">practise</span></h2></div></div>
+      <div class="values">
+        <div><b>Vision</b><span>Write the goal down and keep it in sight every day.</span></div>
+        <div><b>Discipline</b><span>Show up, do the work, and keep your word.</span></div>
+        <div><b>Teamwork</b><span>Share knowledge freely and lift the person next to you.</span></div>
+        <div><b>Celebration</b><span>Honour every win and enjoy the journey together.</span></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:36px">
+        <button class="btn btn-ghost" type="button" data-soon="Founder">Meet our Founder</button>
+        <button class="btn btn-ghost" type="button" data-soon="Vision &amp; Mission">Our Vision &amp; Mission</button>
+        <a class="btn btn-gold" href="#event">Join us in Abeokuta <svg><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EVENT ================= -->
+<section class="view" data-view="event" hidden>
+  <div class="stage">
+    <div class="wrap ev-hero">
+      <div>
+        <div class="kicker">
+          <span class="pill solid">Lifestyle &amp; Retreat</span>
+          <span class="pill"><span class="pulse"></span>Dates confirmed</span>
+        </div>
+        <h1 class="ev-title"><span class="serif">Senior Managers’</span><span class="big">RETREAT</span></h1>
+        <p class="ev-tag">A well-deserved escape. A powerful experience.</p>
+        <p class="ev-r">Relax · Recharge · Reflect · Reconnect</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px">
+          <a class="btn btn-gold" href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener">Register now <svg><use href="#i-ext"/></svg></a>
+          <a class="btn btn-ghost" href="#included" data-scroll>What's included</a>
+        </div>
+      </div>
+      <div class="ev-side">
+        <div class="logo-orb" role="img" aria-label="Goal Achievers logo">
+          <span class="glow"></span><span class="ring"></span><span class="orbit"><i></i><i></i><i></i><i></i><i></i></span><span class="face"></span>
+        </div>
+        <p class="count-label" id="countLabel">Countdown to Abeokuta</p>
+        <div class="countdown" id="countdown" aria-live="polite">
+          <div><b data-u="d">--</b><span>Days</span></div>
+          <div><b data-u="h">--</b><span>Hours</span></div>
+          <div><b data-u="m">--</b><span>Mins</span></div>
+          <div><b data-u="s">--</b><span>Secs</span></div>
+        </div>
+      </div>
+    </div>
+    <svg class="dunes" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path fill="#5a3a20" d="M0 40C180 10 300 70 520 40S900 0 1100 30s260 30 340 10V90H0z"/><path fill="#8c5a2b" d="M0 60c200-30 360 20 560 0s420-40 620-10 200 20 260 10v30H0z"/><path fill="#f6ede1" d="M0 80c240-14 480 6 720-4s480-12 720 0v14H0z"/></svg>
+  </div>
+
+  <div class="paper">
+    <div class="wrap section" style="padding-top:40px">
+      <div class="facts">
+        <div><span class="lbl"><svg><use href="#i-cal"/></svg>Date</span><span class="val">27–29 Nov</span><span class="sub">Friday to Sunday, 2026</span></div>
+        <div><span class="lbl"><svg><use href="#i-pin"/></svg>Venue</span><span class="val">Abeokuta</span><span class="sub">Ogun State · 3 days, all-inclusive</span></div>
+        <div class="price"><span class="lbl"><svg><use href="#i-naira"/></svg>Fee</span><span class="val">₦100,000</span><span class="sub">Per person · covers everything below</span></div>
+      </div>
+      <div class="deadline">
+        <div class="d-left">
+          <span class="alarm"><svg width="24" height="24"><use href="#i-alarm"/></svg></span>
+          <div><b>Payment deadline: 1 November 2026</b><span>Secure your spot early so you don't miss out.</span></div>
+        </div>
+        <a class="btn btn-dark" href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener">Fill the form <svg><use href="#i-ext"/></svg></a>
+      </div>
+    </div>
+
+    <div class="wrap section" id="included" style="padding-top:24px">
+      <div class="section-head">
+        <div><p class="eyebrow">Everything is included</p><h2>One fee. <span class="serif">Three full days.</span></h2></div>
+        <p>Your ₦100,000 covers the whole experience. Just show up ready to learn, explore and have a great time.</p>
+      </div>
+      <div class="included">
+        <article><span class="ico" style="background:var(--r-blue)"><svg><use href="#i-train"/></svg></span><h3>Trainings</h3><p>Leadership sessions to sharpen how you lead.</p></article>
+        <article><span class="ico" style="background:var(--r-green)"><svg><use href="#i-mount"/></svg></span><h3>Sightseeing</h3><p>Guided tours of Abeokuta's landmarks.</p></article>
+        <article><span class="ico" style="background:var(--r-orange)"><svg><use href="#i-people"/></svg></span><h3>Fun Activities</h3><p>Games, team bonding and evening hangouts.</p></article>
+        <article><span class="ico" style="background:var(--r-red)"><svg><use href="#i-fork"/></svg></span><h3>Feeding</h3><p>All meals covered, all three days.</p></article>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage" style="background:var(--ink)">
+    <div class="wrap section">
+      <div class="section-head">
+        <div><p class="eyebrow">What you'll take home</p><h2>Same purpose. <span class="serif">Greater experience.</span></h2></div>
+        <p>Abeokuta, the rock city and home of the famous Olumo Rock, sets the scene for a weekend away from the daily grind.</p>
+      </div>
+      <div class="gains">
+        <div><svg><use href="#i-lotus"/></svg><p><b>Rest</b><span>Your mind</span></p></div>
+        <div><svg><use href="#i-bars"/></svg><p><b>Grow</b><span>Your leadership</span></p></div>
+        <div><svg><use href="#i-net"/></svg><p><b>Strengthen</b><span>Your network</span></p></div>
+        <div><svg><use href="#i-heart"/></svg><p><b>Enjoy</b><span>The journey</span></p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="paper">
+    <div class="wrap section">
+      <div class="steps-wrap">
+        <div>
+          <p class="eyebrow">How to register</p>
+          <h2 style="font-family:var(--f-display);font-size:clamp(30px,4.6vw,52px);margin:10px 0 28px">Three steps to <span class="serif">Abeokuta</span></h2>
+          <ol class="steps">
+            <li><div><h3>Fill the registration form</h3><p>Open the official Goal Achievers form and enter your details.</p></div></li>
+            <li><div><h3>Pay ₦100,000</h3><p>Complete your payment before the 1 November 2026 deadline to confirm your seat.</p></div></li>
+            <li><div><h3>Pack your bag</h3><p>Be in Abeokuta on Friday, 27 November. We'll take care of the rest until Sunday, 29 November.</p></div></li>
+          </ol>
+        </div>
+        <figure class="flyer">
+          <img src="flyer.jpg" alt="Official flyer: Senior Managers' Retreat, 27–29 November 2026, Abeokuta, 3 days all-inclusive" width="900" height="1200" loading="lazy">
+          <figcaption>Official announcement flyer</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage" style="background:var(--ink)">
+    <div class="wrap section">
+      <div class="register">
+        <div>
+          <p class="eyebrow">Seats are limited</p>
+          <h2 style="margin-top:10px">See you in <span class="serif" style="color:var(--gold)">Abeokuta.</span></h2>
+          <p>27–29 November 2026 · Trainings, sightseeing, fun activities and all meals included.</p>
+        </div>
+        <div class="reg-actions">
+          <div class="price-tag">₦100,000<small>All-inclusive · per person</small></div>
+          <a class="btn btn-gold" href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener">Register now <svg><use href="#i-ext"/></svg></a>
+          <span class="form-link">forms.gle/jy5curP7vkNFCM9dA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="view" data-view="contact" hidden>
+  <div class="stage">
+    <div class="wrap about-hero" style="grid-template-columns:1fr">
+      <div>
+        <p class="eyebrow">Contact Us</p>
+        <h1 style="margin-top:14px">Let's <span class="serif" style="color:var(--gold)">talk.</span></h1>
+        <p>Questions about the Senior Managers' Retreat, payments, or joining Goal Achievers? Reach out and our team will get back to you.</p>
+      </div>
+    </div>
+    <svg class="dunes" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path fill="#5a3a20" d="M0 40C180 10 300 70 520 40S900 0 1100 30s260 30 340 10V90H0z"/><path fill="#8c5a2b" d="M0 60c200-30 360 20 560 0s420-40 620-10 200 20 260 10v30H0z"/><path fill="#f6ede1" d="M0 80c240-14 480 6 720-4s480-12 720 0v14H0z"/></svg>
+  </div>
+  <div class="paper">
+    <div class="wrap section">
+      <div class="contact-grid">
+        <div class="c-card">
+          <h3>Reach the team</h3>
+          <p>Direct lines for Goal Achievers.</p>
+          <div id="contactRows"></div>
+        </div>
+        <div class="c-card dark">
+          <p class="eyebrow">Retreat registration</p>
+          <h3>Coming to Abeokuta?</h3>
+          <p>The fastest way to secure your place at the Senior Managers' Retreat (27–29 November 2026, ₦100,000) is the official registration form.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px">
+            <a class="btn btn-gold" href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener">Open the form <svg><use href="#i-ext"/></svg></a>
+            <a class="btn btn-ghost" href="#event">Event details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-row">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span class="logo-orb sm" aria-hidden="true"><span class="glow"></span><span class="ring"></span><span class="face"></span></span>
+      <div><div class="sig">See you in Abeokuta.</div><small>Goal Achievers · 2026</small></div>
+    </div>
+    <nav aria-label="Footer">
+      <a href="#home">Home</a><a href="#about">About Us</a>
+      <button type="button" data-soon="Founder">Founder</button>
+      <button type="button" data-soon="Vision &amp; Mission">Vision &amp; Mission</button>
+      <a href="#event">Event</a><a href="#contact">Contact Us</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="modal" id="soonModal" role="dialog" aria-modal="true" aria-labelledby="soonTitle" hidden>
+  <div class="modal-card">
+    <div class="tape" aria-hidden="true"></div>
+    <button class="x" type="button" id="soonClose" aria-label="Close">×</button>
+    <div class="modal-body">
+      <div class="logo-orb" aria-hidden="true"><span class="glow"></span><span class="ring"></span><span class="face"></span></div>
+      <p class="eyebrow" id="soonPage">Founder</p>
+      <h2 id="soonTitle">Coming <span class="serif">soon</span></h2>
+      <p>This page is under construction. We're putting the finishing touches on it, so check back shortly.</p>
+      <div class="bar" aria-hidden="true"><i></i></div>
+      <div class="modal-actions">
+        <a class="btn btn-gold" href="#event" id="soonEvent">See the Retreat</a>
+        <button class="btn btn-ghost" type="button" id="soonOk" style="color:var(--on-paper);background:var(--card);border-color:var(--line)">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* Contact details: fill these in and the Contact page updates automatically. */
+  var CONTACT = [
+    {icon:'i-phone', label:'Phone', value:''},
+    {icon:'i-chat',  label:'WhatsApp', value:''},
+    {icon:'i-mail',  label:'Email', value:''},
+    {icon:'i-pin',   label:'Office', value:''}
+  ];
+
+  var views = ['home','about','event','contact'];
+  var nav = document.getElementById('siteNav');
+  var menuBtn = document.getElementById('menuBtn');
+
+  function show(){
+    var name = (location.hash || '').replace('#','');
+    if (views.indexOf(name) === -1) {
+      if (name === 'included' ) { name = 'event'; }
+      else name = 'home';
+    }
+    document.querySelectorAll('[data-view]').forEach(function(v){ v.hidden = v.getAttribute('data-view') !== name; });
+    document.querySelectorAll('[data-link]').forEach(function(a){
+      if (a.getAttribute('data-link') === name) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+    });
+    var titles = {home:'Goal Achievers', about:'About Us · Goal Achievers', event:"Senior Managers' Retreat · Goal Achievers", contact:'Contact Us · Goal Achievers'};
+    document.title = titles[name];
+    closeMenu();
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange', show);
+
+  function closeMenu(){ nav.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false'); }
+  menuBtn.addEventListener('click', function(){
+    var open = nav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  /* in-page scroll links that must not change the route */
+  document.querySelectorAll('[data-scroll]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var t = document.querySelector(a.getAttribute('href'));
+      if (t) t.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  /* Coming soon popup */
+  var modal = document.getElementById('soonModal'), lastFocus = null;
+  function openSoon(page){
+    lastFocus = document.activeElement;
+    document.getElementById('soonPage').textContent = page;
+    modal.hidden = false; closeMenu();
+    document.getElementById('soonOk').focus();
+  }
+  function closeSoon(){ modal.hidden = true; if (lastFocus) lastFocus.focus(); }
+  document.querySelectorAll('[data-soon]').forEach(function(b){
+    b.addEventListener('click', function(){ openSoon(b.getAttribute('data-soon')); });
+  });
+  document.getElementById('soonClose').addEventListener('click', closeSoon);
+  document.getElementById('soonOk').addEventListener('click', closeSoon);
+  document.getElementById('soonEvent').addEventListener('click', function(){ modal.hidden = true; });
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeSoon(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.hidden) closeSoon(); });
+
+  /* Countdown to Friday 27 Nov 2026, 00:00 West Africa Time */
+  var start = new Date('2026-11-27T00:00:00+01:00').getTime();
+  var end = new Date('2026-11-30T00:00:00+01:00').getTime();
+  var cd = document.getElementById('countdown');
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function tick(){
+    var now = Date.now(), diff = start - now;
+    var label = document.getElementById('countLabel');
+    var home = document.getElementById('homeCount');
+    if (diff <= 0) {
+      cd.hidden = true;
+      label.textContent = now < end ? 'Happening now in Abeokuta' : 'Thank you for joining us';
+      home.textContent = now < end ? 'Happening now!' : '';
+      return;
+    }
+    var d = Math.floor(diff/864e5), h = Math.floor(diff%864e5/36e5), m = Math.floor(diff%36e5/6e4), s = Math.floor(diff%6e4/1e3);
+    cd.querySelector('[data-u="d"]').textContent = d;
+    cd.querySelector('[data-u="h"]').textContent = pad(h);
+    cd.querySelector('[data-u="m"]').textContent = pad(m);
+    cd.querySelector('[data-u="s"]').textContent = pad(s);
+    home.textContent = d + ' days to go.';
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* Contact rows */
+  var rows = document.getElementById('contactRows');
+  CONTACT.forEach(function(c){
+    var row = document.createElement('div'); row.className = 'row';
+    row.innerHTML = '<svg><use href="#' + c.icon + '"/></svg><div><b></b><span></span></div>';
+    row.querySelector('b').textContent = c.label;
+    var span = row.querySelector('span');
+    if (c.value) {
+      span.textContent = c.value;
+      var btn = document.createElement('button'); btn.className = 'copy'; btn.type = 'button'; btn.textContent = 'Copy';
+      btn.addEventListener('click', function(){
+        var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1500); };
+        if (navigator.clipboard) navigator.clipboard.writeText(c.value).then(done, function(){ selectText(span); });
+        else selectText(span);
+      });
+      row.appendChild(btn);
+    } else {
+      span.textContent = 'Coming soon'; span.className = 'pending';
+    }
+    rows.appendChild(row);
+  });
+  function selectText(el){ var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+  show();
+})();
+</script>
+</body>
+</html>
