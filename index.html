@@ -25,8 +25,10 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
+img{max-width:100%}
 html{scroll-behavior:smooth}
-body{background:var(--ink);color:var(--on-ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:var(--ink);color:var(--on-ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--ink)}
 a{color:inherit}
 h1,h2,h3{text-wrap:balance;margin:0;line-height:1.05}
@@ -225,16 +227,48 @@ p{margin:0}
 @media (max-width:980px){.gains{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:480px){.gains{grid-template-columns:1fr}}
 
-.steps-wrap{display:grid;grid-template-columns:1fr .9fr;gap:48px;align-items:start}
 .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;counter-reset:s}
 .steps li{counter-increment:s;display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
 .steps li::before{content:counter(s);width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-size:22px;background:var(--ink);color:var(--gold)}
 .steps h3{font-family:var(--f-display);font-size:18px}
 .steps p{color:var(--on-paper-dim);font-size:15px;margin-top:4px}
-.flyer{margin:0;border-radius:22px;overflow:hidden;box-shadow:0 24px 60px rgba(40,20,5,.28);transform:rotate(1.5deg);border:6px solid #fff;max-width:440px;justify-self:center}
-.flyer img{display:block;width:100%;height:auto}
-.flyer figcaption{background:#fff;color:var(--on-paper-dim);font-size:13px;padding:8px 6px 4px;text-align:center}
-@media (max-width:860px){.steps-wrap{grid-template-columns:1fr}.flyer{transform:none}}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.pay-grid > *{min-width:0}
+.pay-title{font-family:var(--f-display);font-size:clamp(30px,4.6vw,52px);margin:10px 0 12px}
+.pay-lede{color:var(--on-paper-dim);font-size:17px;margin-bottom:28px;max-width:46ch}
+.pay-card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:20px;box-shadow:0 20px 50px rgba(60,35,15,.10)}
+.acct{background:var(--ink);color:var(--on-ink);border-radius:18px;padding:20px 22px}
+.acct-label{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.acct-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--ink-3)}
+.acct-row:first-of-type{border-top:0}
+.acct-row span{color:var(--on-ink-dim);font-size:14px;flex:1}
+.acct-row b{font-size:16px}
+.acct-row .acct-no{font-family:var(--f-display);font-size:22px;letter-spacing:.04em;color:var(--gold-soft);font-variant-numeric:tabular-nums}
+.acct .copy{margin-left:0;background:var(--ink-2);color:var(--on-ink);border-color:var(--ink-3)}
+.upload{display:flex;flex-direction:column;gap:12px}
+.drop{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:26px 16px;border:2px dashed color-mix(in srgb,var(--copper) 45%,transparent);border-radius:18px;background:var(--paper);color:var(--on-paper);cursor:pointer;transition:border-color .2s,background .2s}
+.drop:hover,.drop.over{border-color:var(--copper);background:#f1e4d2}
+.drop.has-file{border-style:solid;border-color:var(--r-green)}
+.drop svg{color:var(--copper)}
+.drop b{font-size:16px}
+.drop span{color:var(--on-paper-dim);font-size:14px;word-break:break-word}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop:focus-within{outline:3px solid var(--gold);outline-offset:3px}
+.upload .btn{width:100%}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+.verify-msg{border-radius:14px;padding:14px 16px;font-size:15px;line-height:1.5}
+.verify-msg.busy{background:var(--paper);color:var(--on-paper)}
+.verify-msg.bad{background:#fff3f1;color:#8d1c25;border:1.5px solid color-mix(in srgb,var(--r-red) 40%,transparent)}
+.verify-msg ul{margin:6px 0 0;padding-left:20px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--copper);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:8px}
+.unlocked{display:flex;flex-direction:column;gap:12px;background:#eef8ef;border:1.5px solid color-mix(in srgb,var(--r-green) 45%,transparent);border-radius:18px;padding:20px}
+.ok-badge{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#1d6b2e;font-size:15px;letter-spacing:.06em;text-transform:uppercase}
+.ok-list{margin:0;display:grid;gap:8px}
+.ok-list div{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ok-list dt{color:var(--on-paper-dim);font-size:14px}
+.ok-list dd{margin:0;font-weight:700;word-break:break-all}
+.ok-note{color:var(--on-paper-dim);font-size:14px}
+@media (max-width:900px){.pay-grid{grid-template-columns:1fr;gap:32px}}
 
 .register{position:relative;overflow:hidden;border-radius:28px;padding:48px 36px;background:radial-gradient(100% 140% at 0% 0%,color-mix(in srgb,var(--copper) 70%,transparent),transparent 60%),var(--ink-2);border:1px solid color-mix(in srgb,var(--gold) 35%,transparent);display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center}
 .register h2{font-family:var(--f-display);font-size:clamp(28px,4vw,46px)}
@@ -320,6 +354,8 @@ p{margin:0}
     <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6.5 7 .9-5.1 4.8 1.3 7L12 17.8 5.8 21.2l1.3-7L2 9.4l7-.9z"/></symbol>
     <symbol id="i-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="4" r="1.5" fill="currentColor"/><circle cx="4" cy="12" r="1.5" fill="currentColor"/><circle cx="20" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="20" r="1.5" fill="currentColor"/></symbol>
     <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
   </defs>
 </svg>
 
@@ -337,7 +373,7 @@ p{margin:0}
       <button type="button" data-soon="Vision &amp; Mission">Vision &amp; Mission <span class="soon-dot">Soon</span></button>
       <a href="#event" data-link="event">Event</a>
       <a href="#contact" data-link="contact">Contact Us</a>
-      <a class="cta" href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener">Register</a>
+      <a class="cta" href="#pay" data-scroll>Register</a>
     </nav>
   </div>
 </header>
@@ -357,7 +393,7 @@ p{margin:0}
         <p class="ev-tag">A well-deserved escape. A powerful experience.</p>
         <p class="ev-r">Relax · Recharge · Reflect · Reconnect</p>
         <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px">
-          <a class="btn btn-gold" href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener">Register now <svg><use href="#i-ext"/></svg></a>
+          <a class="btn btn-gold" href="#pay" data-scroll>Pay &amp; register <svg><use href="#i-arrow"/></svg></a>
           <a class="btn btn-ghost" href="#included" data-scroll>What's included</a>
         </div>
       </div>
@@ -387,9 +423,9 @@ p{margin:0}
       <div class="deadline">
         <div class="d-left">
           <span class="alarm"><svg width="24" height="24"><use href="#i-alarm"/></svg></span>
-          <div><b>Payment deadline: 1 November 2026</b><span>Secure your spot early so you don't miss out.</span></div>
+          <div><b>Payment deadline: 1 November 2026</b><span>Pay into OPay 8108229724 (Awotipe Roseline), then upload your receipt to register.</span></div>
         </div>
-        <a class="btn btn-dark" href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener">Fill the form <svg><use href="#i-ext"/></svg></a>
+        <a class="btn btn-dark" href="#pay" data-scroll>Pay &amp; register <svg><use href="#i-arrow"/></svg></a>
       </div>
     </div>
 
@@ -422,22 +458,47 @@ p{margin:0}
     </div>
   </div>
 
-  <div class="paper">
+  <div class="paper" id="pay">
     <div class="wrap section">
-      <div class="steps-wrap">
+      <div class="pay-grid">
         <div>
           <p class="eyebrow">How to register</p>
-          <h2 style="font-family:var(--f-display);font-size:clamp(30px,4.6vw,52px);margin:10px 0 28px">Three steps to <span class="serif">Abeokuta</span></h2>
+          <h2 class="pay-title">Pay first, <span class="serif">then register</span></h2>
+          <p class="pay-lede">The registration form opens only after your payment receipt has been checked.</p>
           <ol class="steps">
-            <li><div><h3>Fill the registration form</h3><p>Open the official Goal Achievers form and enter your details.</p></div></li>
-            <li><div><h3>Pay ₦100,000</h3><p>Complete your payment before the 1 November 2026 deadline to confirm your seat.</p></div></li>
-            <li><div><h3>Pack your bag</h3><p>Be in Abeokuta on Friday, 27 November. We'll take care of the rest until Sunday, 29 November.</p></div></li>
+            <li><div><h3>Pay ₦100,000</h3><p>Transfer ₦100,000 to the Goal Achievers OPay account shown here, from any bank app.</p></div></li>
+            <li><div><h3>Upload your receipt</h3><p>Save the receipt or take a screenshot of it, then upload it here. Images and PDFs both work.</p></div></li>
+            <li><div><h3>Fill the registration form</h3><p>Once your receipt checks out, the form unlocks. Copy your transaction reference into the form so we can match your payment.</p></div></li>
           </ol>
         </div>
-        <figure class="flyer">
-          <img src="flyer.webp" alt="Official flyer: Senior Managers' Retreat, 27–29 November 2026, Abeokuta, 3 days all-inclusive" width="900" height="1200" loading="lazy">
-          <figcaption>Official announcement flyer</figcaption>
-        </figure>
+        <div class="pay-card">
+          <div class="acct">
+            <p class="acct-label">Pay into this account</p>
+            <div class="acct-row"><span>Bank</span><b>OPay</b></div>
+            <div class="acct-row"><span>Account number</span><b class="acct-no" id="acctNo">8108229724</b><button class="copy" type="button" id="copyAcct">Copy</button></div>
+            <div class="acct-row"><span>Account name</span><b>Awotipe Roseline</b></div>
+            <div class="acct-row"><span>Amount</span><b>₦100,000</b></div>
+          </div>
+          <form class="upload" id="receiptForm" novalidate>
+            <label class="drop" id="drop" for="receiptFile">
+              <input type="file" id="receiptFile" accept="image/*,application/pdf">
+              <svg width="30" height="30"><use href="#i-upload"/></svg>
+              <b id="dropTitle">Upload your payment receipt</b>
+              <span id="dropHint">Drop it here, or tap to choose a screenshot or PDF</span>
+            </label>
+            <button class="btn btn-gold" id="verifyBtn" type="submit" disabled>Check my receipt</button>
+            <div class="verify-msg" id="verifyMsg" role="status" aria-live="polite" hidden></div>
+          </form>
+          <div class="unlocked" id="unlocked" hidden>
+            <p class="ok-badge"><svg width="18" height="18"><use href="#i-check"/></svg>Payment confirmed</p>
+            <dl class="ok-list">
+              <div><dt>Amount</dt><dd id="okAmount"></dd></div>
+              <div><dt>Transaction reference</dt><dd id="okRef"></dd></div>
+            </dl>
+            <p class="ok-note">Copy your transaction reference into the form so our team can match your payment.</p>
+            <a class="btn btn-gold" id="formLink" href="#" target="_blank" rel="noopener">Open the registration form <svg><use href="#i-ext"/></svg></a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -452,8 +513,8 @@ p{margin:0}
         </div>
         <div class="reg-actions">
           <div class="price-tag">₦100,000<small>All-inclusive · per person</small></div>
-          <a class="btn btn-gold" href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener">Register now <svg><use href="#i-ext"/></svg></a>
-          <span class="form-link">forms.gle/jy5curP7vkNFCM9dA</span>
+          <a class="btn btn-gold" href="#pay" data-scroll>Pay &amp; register <svg><use href="#i-arrow"/></svg></a>
+          <span class="form-link">Pay first, then upload your receipt</span>
         </div>
       </div>
     </div>
@@ -483,9 +544,9 @@ p{margin:0}
         <div class="c-card dark">
           <p class="eyebrow">Retreat registration</p>
           <h3>Coming to Abeokuta?</h3>
-          <p>The fastest way to secure your place at the Senior Managers' Retreat (27–29 November 2026, ₦100,000) is the official registration form.</p>
+          <p>The fastest way to secure your place at the Senior Managers' Retreat (27–29 November 2026, ₦100,000) is to pay ₦100,000 into the Goal Achievers OPay account, upload your receipt on the event page, then fill the registration form.</p>
           <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px">
-            <a class="btn btn-gold" href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener">Open the form <svg><use href="#i-ext"/></svg></a>
+            <a class="btn btn-gold" href="#pay" data-scroll>Pay &amp; register <svg><use href="#i-arrow"/></svg></a>
             <a class="btn btn-ghost" href="#event">Event details</a>
           </div>
         </div>
@@ -570,7 +631,11 @@ p{margin:0}
     a.addEventListener('click', function(e){
       e.preventDefault();
       var t = document.querySelector(a.getAttribute('href'));
-      if (t) t.scrollIntoView({behavior:'smooth', block:'start'});
+      if (!t) return;
+      var go = function(){ t.scrollIntoView({behavior:'smooth', block:'start'}); };
+      closeMenu();
+      if (document.querySelector('[data-view="event"]').hidden) { location.hash = 'event'; setTimeout(go, 80); }
+      else go();
     });
   });
 
@@ -638,6 +703,109 @@ p{margin:0}
     rows.appendChild(row);
   });
   function selectText(el){ var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+  /* Payment receipt check: the form link only comes back from the server after the receipt passes */
+  var fileInput = document.getElementById('receiptFile');
+  var drop = document.getElementById('drop');
+  var verifyBtn = document.getElementById('verifyBtn');
+  var verifyMsg = document.getElementById('verifyMsg');
+  var receiptForm = document.getElementById('receiptForm');
+  var chosen = null;
+
+  document.getElementById('copyAcct').addEventListener('click', function(){
+    var btn = this, el = document.getElementById('acctNo');
+    var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText('8108229724').then(done, function(){ selectText(el); });
+    else selectText(el);
+  });
+
+  function pick(file){
+    if (!file) return;
+    var okType = /^image\//.test(file.type) || file.type === 'application/pdf';
+    if (!okType) { showMsg('bad', ['Upload an image (JPG or PNG) or a PDF of your receipt.']); return; }
+    if (file.type === 'application/pdf' && file.size > 3 * 1024 * 1024) { showMsg('bad', ['That PDF is over 3 MB. Upload a screenshot of the receipt instead.']); return; }
+    chosen = file;
+    document.getElementById('dropTitle').textContent = file.name;
+    document.getElementById('dropHint').textContent = 'Tap to choose a different file';
+    drop.classList.add('has-file');
+    verifyBtn.disabled = false;
+    verifyMsg.hidden = true;
+  }
+  fileInput.addEventListener('change', function(){ pick(fileInput.files[0]); });
+  ['dragenter','dragover'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add('over'); }); });
+  ['dragleave','drop'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.remove('over'); }); });
+  drop.addEventListener('drop', function(e){ if (e.dataTransfer && e.dataTransfer.files[0]) pick(e.dataTransfer.files[0]); });
+
+  function showMsg(kind, lines){
+    verifyMsg.className = 'verify-msg ' + kind;
+    verifyMsg.textContent = '';
+    if (kind === 'busy') {
+      var sp = document.createElement('span'); sp.className = 'spin'; verifyMsg.appendChild(sp);
+      verifyMsg.appendChild(document.createTextNode(lines[0]));
+    } else {
+      var head = document.createElement('b'); head.textContent = "We couldn't confirm this payment.";
+      verifyMsg.appendChild(head);
+      var ul = document.createElement('ul');
+      lines.forEach(function(t){ var li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+      verifyMsg.appendChild(ul);
+    }
+    verifyMsg.hidden = false;
+  }
+
+  function readAsBase64(file){
+    return new Promise(function(resolve, reject){
+      var r = new FileReader();
+      r.onload = function(){ resolve(String(r.result).split(',')[1]); };
+      r.onerror = reject;
+      r.readAsDataURL(file);
+    });
+  }
+
+  // Shrink photos so they upload quickly and stay under the size limit.
+  function prepare(file){
+    if (file.type === 'application/pdf') return readAsBase64(file).then(function(b){ return { file: b, mediaType: 'application/pdf' }; });
+    return new Promise(function(resolve){
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function(){
+        var max = 1800, w = img.naturalWidth, h = img.naturalHeight, k = Math.min(1, max / Math.max(w, h));
+        var c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
+        var ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height); ctx.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        resolve({ file: c.toDataURL('image/jpeg', 0.88).split(',')[1], mediaType: 'image/jpeg' });
+      };
+      img.onerror = function(){
+        URL.revokeObjectURL(url);
+        readAsBase64(file).then(function(b){ resolve({ file: b, mediaType: file.type }); });
+      };
+      img.src = url;
+    });
+  }
+
+  receiptForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!chosen) return;
+    verifyBtn.disabled = true;
+    showMsg('busy', ['Checking your receipt. This takes a few seconds…']);
+    prepare(chosen).then(function(payload){
+      return fetch('/api/verify-receipt', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+        .then(function(r){ return r.json().catch(function(){ return { ok: false, reasons: ['The receipt checker is unavailable right now. Please try again shortly.'] }; }); });
+    }).then(function(data){
+      if (data && data.ok && data.formUrl) {
+        verifyMsg.hidden = true;
+        receiptForm.hidden = true;
+        document.getElementById('okAmount').textContent = data.amount;
+        document.getElementById('okRef').textContent = data.reference;
+        document.getElementById('formLink').href = data.formUrl;
+        document.getElementById('unlocked').hidden = false;
+      } else {
+        showMsg('bad', (data && data.reasons && data.reasons.length) ? data.reasons : ['Please try again with a clear screenshot of your receipt.']);
+        verifyBtn.disabled = false;
+      }
+    }).catch(function(){
+      showMsg('bad', ['We could not reach the receipt checker. Check your internet connection and try again.']);
+      verifyBtn.disabled = false;
+    });
+  });
 
   show();
 })();
