@@ -356,8 +356,8 @@
   });
 
   /* ---------------- Countdown ---------------- */
-  var start = new Date('2026-11-27T00:00:00+01:00').getTime();
-  var end = new Date('2026-11-30T00:00:00+01:00').getTime();
+  var start = new Date('2026-11-20T00:00:00+01:00').getTime();
+  var end = new Date('2026-11-24T00:00:00+01:00').getTime();
   var cd = $('#countdown');
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function tick() {

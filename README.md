@@ -1,6 +1,6 @@
 # GAC — Goal Achievers website
 
-Static website for Goal Achievers. The live page is the Event page (Senior Managers' Retreat, 27–29 November 2026, Abeokuta) plus Contact Us. Home, About Us, Founder and Vision & Mission open a "Coming soon" pop-up.
+Static website for Goal Achievers. The live page is the Event page (Senior Managers' Retreat, 20–23 November 2026, Abeokuta) plus Contact Us. Home, About Us, Founder and Vision & Mission open a "Coming soon" pop-up.
 
 ## Payment check before registration
 Visitors pay ₦100,000 into **OPay 8108229724 (Awotipe Roseline)**, then upload their receipt on the event page.
