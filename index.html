@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="icon" type="image/png" href="logo.png">
+<link rel="icon" type="image/webp" href="logo.webp">
 <title>Goal Achievers</title>
 <meta name="description" content="Goal Achievers: a community of driven people. Senior Managers' Retreat, 27–29 November 2026, Abeokuta.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,7 +66,7 @@ p{margin:0}
 .logo-orb{--size:220px;position:relative;width:var(--size);height:var(--size);flex:none;display:grid;place-items:center;max-width:100%}
 .logo-orb .ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,var(--gold),var(--r-orange),var(--r-red),#a23bb5,var(--r-blue),var(--r-green),var(--gold-soft),var(--gold));animation:spin 6s linear infinite;filter:saturate(1.15)}
 .logo-orb .glow{position:absolute;inset:-14%;border-radius:50%;background:inherit;background:conic-gradient(from 0deg,var(--gold),var(--r-orange),var(--r-red),#a23bb5,var(--r-blue),var(--r-green),var(--gold));filter:blur(28px);opacity:.55;animation:spin 6s linear infinite,breathe 3.2s ease-in-out infinite}
-.logo-orb .face{position:relative;width:88%;height:88%;border-radius:50%;background:#fff url("logo.png") center/108% no-repeat;box-shadow:inset 0 0 0 3px rgba(0,0,0,.08),0 10px 30px rgba(0,0,0,.35);animation:float 5s ease-in-out infinite}
+.logo-orb .face{position:relative;width:88%;height:88%;border-radius:50%;background:#fff url("logo.webp") center/108% no-repeat;box-shadow:inset 0 0 0 3px rgba(0,0,0,.08),0 10px 30px rgba(0,0,0,.35);animation:float 5s ease-in-out infinite}
 .logo-orb .face::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.75) 48%,transparent 60%);background-size:250% 100%;animation:shine 4.5s ease-in-out infinite;mix-blend-mode:soft-light}
 .logo-orb .orbit{position:absolute;inset:-8%;animation:spin 9s linear infinite reverse}
 .logo-orb .orbit i{position:absolute;width:10px;height:10px;border-radius:50%;box-shadow:0 0 12px currentColor;background:currentColor}
@@ -325,14 +325,14 @@ p{margin:0}
 
 <header class="site-head">
   <div class="wrap head-row">
-    <a class="brand" href="#home" aria-label="Goal Achievers home">
+    <a class="brand" href="#event" aria-label="Goal Achievers home">
       <span class="logo-orb sm" aria-hidden="true"><span class="glow"></span><span class="ring"></span><span class="face"></span></span>
       <span class="brand-name">Goal Achievers<small>Rise · Together</small></span>
     </a>
     <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav"><span></span><span></span><span></span></button>
     <nav class="nav" id="siteNav" aria-label="Main">
-      <a href="#home" data-link="home">Home</a>
-      <a href="#about" data-link="about">About Us</a>
+      <button type="button" data-soon="Home">Home <span class="soon-dot">Soon</span></button>
+      <button type="button" data-soon="About Us">About Us <span class="soon-dot">Soon</span></button>
       <button type="button" data-soon="Founder">Founder <span class="soon-dot">Soon</span></button>
       <button type="button" data-soon="Vision &amp; Mission">Vision &amp; Mission <span class="soon-dot">Soon</span></button>
       <a href="#event" data-link="event">Event</a>
@@ -344,117 +344,8 @@ p{margin:0}
 
 <main id="main">
 
-<!-- ================= HOME ================= -->
-<section class="view" data-view="home">
-  <div class="stage">
-    <div class="wrap">
-      <div class="hero">
-        <div>
-          <p class="eyebrow">Welcome to Goal Achievers</p>
-          <h1 style="margin-top:16px"><span class="serif">Set the goal.</span>Rise <span class="gold">together.</span></h1>
-          <p class="lede">We are a community of driven people who set bold goals, lift one another up, and celebrate every win along the way. Our biggest gathering of the year is almost here.</p>
-          <div class="actions">
-            <a class="btn btn-gold" href="#event">See the Retreat <svg><use href="#i-arrow"/></svg></a>
-            <a class="btn btn-ghost" href="#about">About Us</a>
-          </div>
-        </div>
-        <div class="logo-orb" aria-label="Goal Achievers logo" role="img">
-          <span class="glow"></span><span class="ring"></span>
-          <span class="orbit"><i></i><i></i><i></i><i></i><i></i></span>
-          <span class="face"></span>
-        </div>
-      </div>
-
-      <a class="feature" href="#event" style="text-decoration:none;color:inherit">
-        <div class="date-chip"><b>27–29</b><span>NOV 2026</span></div>
-        <div>
-          <p class="eyebrow" style="margin-bottom:6px"><span class="tag live">Registration open</span></p>
-          <h3>Senior Managers' Retreat · Abeokuta</h3>
-          <p>Three all-inclusive days of training, sightseeing, fun and good food. ₦100,000 per person. <span id="homeCount"></span></p>
-        </div>
-        <span class="btn btn-gold">Details <svg><use href="#i-arrow"/></svg></span>
-      </a>
-    </div>
-    <svg class="dunes" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path fill="#5a3a20" d="M0 40C180 10 300 70 520 40S900 0 1100 30s260 30 340 10V90H0z"/><path fill="#8c5a2b" d="M0 60c200-30 360 20 560 0s420-40 620-10 200 20 260 10v30H0z"/><path fill="#f6ede1" d="M0 80c240-14 480 6 720-4s480-12 720 0v14H0z"/></svg>
-  </div>
-
-  <div class="paper">
-    <div class="wrap section">
-      <div class="section-head">
-        <div><p class="eyebrow">What our badge stands for</p><h2>Every mark has a <span class="serif">meaning</span></h2></div>
-        <p>Our logo tells our story: protected by community, lifted by people, reaching for a star that is always just ahead.</p>
-      </div>
-      <div class="meaning">
-        <article><span class="ico" style="background:var(--ink)"><svg width="24" height="24"><use href="#i-shield"/></svg></span><h3>The Shield</h3><p>A strong, safe circle where members are supported, protected and pushed to grow.</p></article>
-        <article><span class="ico" style="background:var(--r-orange)"><svg width="24" height="24"><use href="#i-star"/></svg></span><h3>The Shooting Star</h3><p>The goal we chase together. Once we reach one, we set our sights on the next.</p></article>
-        <article><span class="ico" style="background:var(--copper)"><svg width="24" height="24"><use href="#i-people"/></svg></span><h3>Lifting Each Other</h3><p>At the centre, people raise one another higher. No one achieves alone.</p></article>
-        <article><span class="ico" style="background:var(--r-blue)"><svg width="24" height="24"><use href="#i-circle"/></svg></span><h3>The Circle</h3><p>A united team holding hands around a shared purpose, from every walk of life.</p></article>
-      </div>
-    </div>
-  </div>
-
-  <div class="stage" style="background:var(--ink)">
-    <div class="wrap section">
-      <div class="section-head"><div><p class="eyebrow">Explore</p><h2>Find your <span class="serif">way around</span></h2></div></div>
-      <div class="quick">
-        <a href="#event"><h3>The Retreat <span class="tag live">Live</span></h3><p>Dates, venue, price, everything included, and the registration form.</p></a>
-        <a href="#about"><h3>About Us <svg width="22" height="22"><use href="#i-arrow"/></svg></h3><p>Who Goal Achievers are and what brings us together.</p></a>
-        <a href="#contact"><h3>Contact Us <svg width="22" height="22"><use href="#i-arrow"/></svg></h3><p>Questions about the retreat or joining the community.</p></a>
-        <button type="button" data-soon="Founder"><h3>Our Founder <span class="tag">Coming soon</span></h3><p>The story of the person who started it all.</p></button>
-        <button type="button" data-soon="Vision &amp; Mission"><h3>Vision &amp; Mission <span class="tag">Coming soon</span></h3><p>Where we are headed and how we plan to get there.</p></button>
-        <a href="https://forms.gle/jy5curP7vkNFCM9dA" target="_blank" rel="noopener"><h3>Register Now <svg width="20" height="20"><use href="#i-ext"/></svg></h3><p>Secure your seat at the Senior Managers' Retreat.</p></a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= ABOUT ================= -->
-<section class="view" data-view="about" hidden>
-  <div class="stage">
-    <div class="wrap about-hero">
-      <div class="logo-orb" style="--size:240px" role="img" aria-label="Goal Achievers logo">
-        <span class="glow"></span><span class="ring"></span><span class="orbit"><i></i><i></i><i></i><i></i><i></i></span><span class="face"></span>
-      </div>
-      <div>
-        <p class="eyebrow">About Us</p>
-        <h1 style="margin-top:14px">People who <span class="serif" style="color:var(--gold)">finish</span> what they start.</h1>
-        <p>Goal Achievers is a family of ambitious men and women who believe big goals are easier to reach when you have the right people beside you.</p>
-      </div>
-    </div>
-    <svg class="dunes" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path fill="#5a3a20" d="M0 40C180 10 300 70 520 40S900 0 1100 30s260 30 340 10V90H0z"/><path fill="#8c5a2b" d="M0 60c200-30 360 20 560 0s420-40 620-10 200 20 260 10v30H0z"/><path fill="#f6ede1" d="M0 80c240-14 480 6 720-4s480-12 720 0v14H0z"/></svg>
-  </div>
-  <div class="paper">
-    <div class="wrap section">
-      <div class="prose">
-        <div>
-          <p>We started with a simple idea: when driven people come together, share what they know and hold each other accountable, everyone goes further. Today Goal Achievers brings together team members and leaders who are serious about growth in their work, their finances and their lives.</p>
-          <p>We train our leaders, celebrate our achievers, and make time to rest and reconnect. Our gatherings, like the Senior Managers' Retreat, are where learning meets friendship and where the next set of goals gets written down.</p>
-          <p>Whether you are just starting out or already leading a team, there is a place for you here.</p>
-        </div>
-        <blockquote>“No one achieves alone. We rise by lifting others.”<footer>The Goal Achievers way</footer></blockquote>
-      </div>
-    </div>
-  </div>
-  <div class="stage" style="background:var(--ink)">
-    <div class="wrap section">
-      <div class="section-head"><div><p class="eyebrow">What we live by</p><h2>Four things we <span class="serif">practise</span></h2></div></div>
-      <div class="values">
-        <div><b>Vision</b><span>Write the goal down and keep it in sight every day.</span></div>
-        <div><b>Discipline</b><span>Show up, do the work, and keep your word.</span></div>
-        <div><b>Teamwork</b><span>Share knowledge freely and lift the person next to you.</span></div>
-        <div><b>Celebration</b><span>Honour every win and enjoy the journey together.</span></div>
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:36px">
-        <button class="btn btn-ghost" type="button" data-soon="Founder">Meet our Founder</button>
-        <button class="btn btn-ghost" type="button" data-soon="Vision &amp; Mission">Our Vision &amp; Mission</button>
-        <a class="btn btn-gold" href="#event">Join us in Abeokuta <svg><use href="#i-arrow"/></svg></a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ================= EVENT ================= -->
-<section class="view" data-view="event" hidden>
+<section class="view" data-view="event">
   <div class="stage">
     <div class="wrap ev-hero">
       <div>
@@ -544,7 +435,7 @@ p{margin:0}
           </ol>
         </div>
         <figure class="flyer">
-          <img src="flyer.jpg" alt="Official flyer: Senior Managers' Retreat, 27–29 November 2026, Abeokuta, 3 days all-inclusive" width="900" height="1200" loading="lazy">
+          <img src="flyer.webp" alt="Official flyer: Senior Managers' Retreat, 27–29 November 2026, Abeokuta, 3 days all-inclusive" width="900" height="1200" loading="lazy">
           <figcaption>Official announcement flyer</figcaption>
         </figure>
       </div>
@@ -612,7 +503,8 @@ p{margin:0}
       <div><div class="sig">See you in Abeokuta.</div><small>Goal Achievers · 2026</small></div>
     </div>
     <nav aria-label="Footer">
-      <a href="#home">Home</a><a href="#about">About Us</a>
+      <button type="button" data-soon="Home">Home</button>
+      <button type="button" data-soon="About Us">About Us</button>
       <button type="button" data-soon="Founder">Founder</button>
       <button type="button" data-soon="Vision &amp; Mission">Vision &amp; Mission</button>
       <a href="#event">Event</a><a href="#contact">Contact Us</a>
@@ -648,21 +540,19 @@ p{margin:0}
     {icon:'i-pin',   label:'Office', value:''}
   ];
 
-  var views = ['home','about','event','contact'];
+  var views = ['event','contact'];
   var nav = document.getElementById('siteNav');
   var menuBtn = document.getElementById('menuBtn');
 
   function show(){
     var name = (location.hash || '').replace('#','');
-    if (views.indexOf(name) === -1) {
-      if (name === 'included' ) { name = 'event'; }
-      else name = 'home';
-    }
+    if (views.indexOf(name) === -1) name = 'event';
+    if (name === 'event' && (location.hash === '#home' || location.hash === '#about')) openSoon(location.hash === '#home' ? 'Home' : 'About Us');
     document.querySelectorAll('[data-view]').forEach(function(v){ v.hidden = v.getAttribute('data-view') !== name; });
     document.querySelectorAll('[data-link]').forEach(function(a){
       if (a.getAttribute('data-link') === name) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
     });
-    var titles = {home:'Goal Achievers', about:'About Us · Goal Achievers', event:"Senior Managers' Retreat · Goal Achievers", contact:'Contact Us · Goal Achievers'};
+    var titles = {event:"Senior Managers' Retreat · Goal Achievers", contact:'Contact Us · Goal Achievers'};
     document.title = titles[name];
     closeMenu();
     window.scrollTo(0,0);
@@ -710,7 +600,7 @@ p{margin:0}
   function tick(){
     var now = Date.now(), diff = start - now;
     var label = document.getElementById('countLabel');
-    var home = document.getElementById('homeCount');
+    var home = document.getElementById('homeCount') || {};
     if (diff <= 0) {
       cd.hidden = true;
       label.textContent = now < end ? 'Happening now in Abeokuta' : 'Thank you for joining us';
