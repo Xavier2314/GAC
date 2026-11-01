@@ -431,3 +431,51 @@ p{margin:0}
   .btn:hover svg{transform:none}
   .drop:hover .drop-ico{transform:none}
 }
+
+/* ---------- Payment: three steps, each with its action ---------- */
+.pay{padding:110px 0 120px;border-radius:44px 44px 0 0}
+.pay-head{max-width:760px;margin-bottom:46px}
+.pay-head .sec-lede{margin-top:18px}
+.pay-head .sec-lede b{color:var(--on-paper)}
+.pay-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start;counter-reset:none}
+.pstep{position:relative;display:flex;flex-direction:column;gap:18px;padding:22px;border-radius:28px;background:var(--card);border:1px solid var(--line);box-shadow:0 30px 60px -40px rgba(60,35,15,.45);min-width:0;transition:border-color .4s,box-shadow .4s}
+.pstep-head{display:flex;gap:14px;align-items:flex-start}
+.pstep-num{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:900;font-stretch:110%;font-size:20px;background:var(--ink);color:var(--gold-soft);box-shadow:0 0 0 4px rgba(229,169,48,.18);transition:background .4s,color .4s}
+.pstep h3{font-family:var(--f-display);font-weight:800;font-stretch:110%;font-size:21px;letter-spacing:-.02em;line-height:1.15}
+.pstep-head p{color:var(--on-paper-dim);font-size:15px;margin-top:4px}
+.pstep.done .pstep-num{background:var(--r-green);color:#fff;box-shadow:0 0 0 4px rgba(47,138,65,.18)}
+.pstep.active{border-color:rgba(47,138,65,.5);box-shadow:0 30px 60px -30px rgba(47,138,65,.45)}
+.pstep .bank-card{padding:22px 22px 20px}
+.pstep .bc-number{margin:22px 0 18px}
+.pstep .bc-number b{font-size:min(36px,8.4vw)!important}
+.pstep .drop{padding:26px 16px}
+.locked{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:26px 18px;border-radius:20px;border:1.5px dashed var(--line);background:var(--paper);color:var(--on-paper-dim);font-size:15px}
+.locked-ico{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);color:var(--copper)}
+.locked-ico svg{width:22px;height:22px}
+@media (max-width:1100px){
+  .pay-steps{grid-template-columns:minmax(0,1fr);gap:16px;max-width:620px}
+  .pay{padding:80px 0 100px}
+  .pay-head{margin-bottom:28px}
+}
+@media (max-width:600px){
+  .pay{padding:56px 0 90px;border-radius:32px 32px 0 0}
+  .pay-head .h2{font-size:clamp(32px,9vw,44px)}
+  .pay-head .sec-lede{font-size:16px}
+  .pstep{padding:18px;border-radius:24px;gap:16px}
+  .pstep-num{width:38px;height:38px;font-size:18px}
+  .pstep h3{font-size:19px}
+  .pstep .bank-card{padding:20px 18px 18px}
+  .orb--hero{--size:min(200px,52vw)}
+  .hero{padding:96px 0 70px}
+  .hero-title{margin-top:20px}
+  .hero-cta{margin-top:28px}
+}
+.marquee{border-top:0}
+@media (hover:none){
+  .btn-line:hover{color:var(--on-ink);border-color:rgba(247,220,148,.32)}
+  .btn-line:hover::before{transform:scaleY(0)}
+  .btn-gold:hover::before{transform:translateX(-120%)}
+}
+.step-ok{display:flex;align-items:center;gap:10px;padding:16px 18px;border-radius:18px;background:#eef8ef;border:1px solid rgba(47,138,65,.35);color:#1d6b2e;font-weight:700}
+.step-ok span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--r-green);color:#fff;flex:none}
+.step-ok svg{width:16px;height:16px}

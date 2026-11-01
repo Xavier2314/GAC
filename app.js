@@ -427,6 +427,7 @@
     $('#dropTitle').textContent = file.name;
     $('#dropHint').textContent = 'Tap to choose a different file';
     drop.classList.add('has-file'); verifyBtn.disabled = false; verifyMsg.hidden = true;
+    $('#step1').classList.add('done');
   }
   fileInput.addEventListener('change', function () { pick(fileInput.files[0]); });
   ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
@@ -462,11 +463,15 @@
     }).then(function (data) {
       if (data && data.ok && data.formUrl) {
         verifyMsg.hidden = true; receiptForm.hidden = true;
+        var lockedBox = $('#formLocked'); if (lockedBox) lockedBox.hidden = true;
+        var okBox = $('#receiptOk'); if (okBox) okBox.hidden = false;
+        $('#step2').classList.add('done'); $('#step3').classList.add('active');
         $('#okAmount').textContent = data.amount;
         $('#okRef').textContent = data.reference;
         $('#formLink').href = data.formUrl;
         var un = $('#unlocked'); un.hidden = false;
         if (animate) gsap.from(un, { y: 20, opacity: 0, scale: 0.97, duration: 0.9, ease: 'expo.out' });
+        if (window.innerWidth < 1024) setTimeout(function () { scrollToEl($('#step3')); }, 150);
       } else {
         showMsg('bad', (data && data.reasons && data.reasons.length) ? data.reasons : ['Please try again with a clear screenshot of your receipt.']);
         verifyBtn.disabled = false;

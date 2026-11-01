@@ -36,6 +36,7 @@
     <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
     <symbol id="i-spark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.6L20 10l-6.2 1.6L12 18l-1.8-6.4L4 10l6.2-1.4z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
     <symbol id="i-alarm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7"/><path d="M12 10v3l2 2M5 3L2 6M19 3l3 3"/></symbol>
   </defs>
 </svg>
@@ -145,66 +146,75 @@
     <a class="scroll-cue" href="#pay" data-scroll aria-label="Scroll to details"><span>Scroll</span><i></i></a>
   </section>
 
+  <section class="pay" id="pay">
+    <div class="wrap">
+      <div class="pay-head">
+        <p class="eyebrow">How to register</p>
+        <h2 class="h2" data-split>Three steps <em>to your seat.</em></h2>
+        <p class="sec-lede">Pay, upload your payment screenshot, then fill the form. <b>Already paid?</b> Start from step 2.</p>
+      </div>
+
+      <ol class="pay-steps">
+        <li class="pstep" id="step1">
+          <div class="pstep-head"><span class="pstep-num">1</span><div><h3>Pay ₦100,000</h3><p>Transfer to this account from any bank app.</p></div></div>
+          <div class="bank-card" id="bankCard">
+            <div class="bc-top">
+              <span class="bc-label">Pay into this account</span>
+              <span class="bc-bank">OPay</span>
+            </div>
+            <div class="bc-number">
+              <b id="acctNo">8108229724</b>
+              <button class="copy" type="button" id="copyAcct"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
+            </div>
+            <div class="bc-bottom">
+              <div><span>Account name</span><b>Awotipe Roseline</b></div>
+              <div><span>Amount</span><b>₦100,000</b></div>
+            </div>
+            <span class="bc-shine" aria-hidden="true"></span>
+          </div>
+        </li>
+
+        <li class="pstep" id="step2">
+          <div class="pstep-head"><span class="pstep-num">2</span><div><h3>Upload your payment screenshot</h3><p>Screenshot the receipt in your bank app, then upload it here.</p></div></div>
+          <form class="upload" id="receiptForm" novalidate>
+            <label class="drop" id="drop" for="receiptFile">
+              <input type="file" id="receiptFile" accept="image/*,application/pdf">
+              <span class="drop-ico"><svg><use href="#i-upload"/></svg></span>
+              <b id="dropTitle">Tap to upload your screenshot</b>
+              <span id="dropHint">Image or PDF of your payment receipt</span>
+            </label>
+            <button class="btn btn-gold btn-block" id="verifyBtn" type="submit" disabled><span>Check my receipt</span></button>
+            <div class="verify-msg" id="verifyMsg" role="status" aria-live="polite" hidden></div>
+          </form>
+          <p class="step-ok" id="receiptOk" hidden><span><svg><use href="#i-check"/></svg></span>Receipt checked. Continue to step 3.</p>
+        </li>
+
+        <li class="pstep" id="step3">
+          <div class="pstep-head"><span class="pstep-num">3</span><div><h3>Fill the registration form</h3><p>The form opens here once your receipt checks out.</p></div></div>
+          <div class="locked" id="formLocked">
+            <span class="locked-ico"><svg><use href="#i-lock"/></svg></span>
+            <p>Locked until your payment screenshot is checked in step 2.</p>
+          </div>
+          <div class="unlocked" id="unlocked" hidden>
+            <p class="ok-badge"><span><svg><use href="#i-check"/></svg></span>Payment confirmed</p>
+            <dl class="ok-list">
+              <div><dt>Amount</dt><dd id="okAmount"></dd></div>
+              <div><dt>Transaction reference</dt><dd id="okRef"></dd></div>
+            </dl>
+            <p class="ok-note">Copy your transaction reference into the form so our team can match your payment.</p>
+            <a class="btn btn-gold btn-block" id="formLink" href="#" target="_blank" rel="noopener"><span>Open the registration form</span><svg><use href="#i-ext"/></svg></a>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
   <div class="marquee" aria-label="Relax, recharge, reflect, reconnect">
     <div class="marquee-track" id="marqueeTrack" aria-hidden="true">
       <span>Relax</span><svg><use href="#i-spark"/></svg><span class="o">Recharge</span><svg><use href="#i-spark"/></svg><span>Reflect</span><svg><use href="#i-spark"/></svg><span class="o">Reconnect</span><svg><use href="#i-spark"/></svg>
       <span>Relax</span><svg><use href="#i-spark"/></svg><span class="o">Recharge</span><svg><use href="#i-spark"/></svg><span>Reflect</span><svg><use href="#i-spark"/></svg><span class="o">Reconnect</span><svg><use href="#i-spark"/></svg>
     </div>
   </div>
-
-  <section class="pay" id="pay">
-    <div class="wrap pay-grid">
-      <div class="pay-copy">
-        <p class="eyebrow" data-reveal>How to register</p>
-        <h2 class="h2" data-split>Pay first, <em>then register.</em></h2>
-        <p class="sec-lede" data-reveal>The registration form opens only after your payment receipt has been checked.</p>
-        <ol class="steps" id="steps">
-          <li data-reveal><span class="step-dot"></span><div><h3>Pay ₦100,000</h3><p>Transfer ₦100,000 to the Goal Achievers OPay account shown here, from any bank app.</p></div></li>
-          <li data-reveal><span class="step-dot"></span><div><h3>Upload your receipt</h3><p>Save the receipt or take a screenshot of it, then upload it here. Images and PDFs both work.</p></div></li>
-          <li data-reveal><span class="step-dot"></span><div><h3>Fill the registration form</h3><p>Once your receipt checks out, the form unlocks. Copy your transaction reference into the form so we can match your payment.</p></div></li>
-        </ol>
-      </div>
-
-      <div class="pay-card" data-reveal>
-        <div class="bank-card" id="bankCard">
-          <div class="bc-top">
-            <span class="bc-label">Pay into this account</span>
-            <span class="bc-bank">OPay</span>
-          </div>
-          <div class="bc-number">
-            <b id="acctNo">8108229724</b>
-            <button class="copy" type="button" id="copyAcct"><svg><use href="#i-copy"/></svg><span>Copy</span></button>
-          </div>
-          <div class="bc-bottom">
-            <div><span>Account name</span><b>Awotipe Roseline</b></div>
-            <div><span>Amount</span><b>₦100,000</b></div>
-          </div>
-          <span class="bc-shine" aria-hidden="true"></span>
-        </div>
-
-        <form class="upload" id="receiptForm" novalidate>
-          <label class="drop" id="drop" for="receiptFile">
-            <input type="file" id="receiptFile" accept="image/*,application/pdf">
-            <span class="drop-ico"><svg><use href="#i-upload"/></svg></span>
-            <b id="dropTitle">Upload your payment receipt</b>
-            <span id="dropHint">Drop it here, or tap to choose a screenshot or PDF</span>
-          </label>
-          <button class="btn btn-gold btn-block" id="verifyBtn" type="submit" disabled><span>Check my receipt</span></button>
-          <div class="verify-msg" id="verifyMsg" role="status" aria-live="polite" hidden></div>
-        </form>
-
-        <div class="unlocked" id="unlocked" hidden>
-          <p class="ok-badge"><span><svg><use href="#i-check"/></svg></span>Payment confirmed</p>
-          <dl class="ok-list">
-            <div><dt>Amount</dt><dd id="okAmount"></dd></div>
-            <div><dt>Transaction reference</dt><dd id="okRef"></dd></div>
-          </dl>
-          <p class="ok-note">Copy your transaction reference into the form so our team can match your payment.</p>
-          <a class="btn btn-gold btn-block" id="formLink" href="#" target="_blank" rel="noopener"><span>Open the registration form</span><svg><use href="#i-ext"/></svg></a>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section class="essentials" id="essentials">
     <div class="wrap">
