@@ -175,14 +175,15 @@
         </li>
 
         <li class="pstep" id="step2">
-          <div class="pstep-head"><span class="pstep-num">2</span><div><h3>Upload your payment screenshot</h3><p>Screenshot the receipt in your bank app, then upload it here.</p></div></div>
+          <div class="pstep-head"><span class="pstep-num">2</span><div><h3>Upload your payment screenshot</h3><p>Screenshot the receipt in your bank app, then upload it here. Paid in parts? Add up to 3 screenshots.</p></div></div>
           <form class="upload" id="receiptForm" novalidate>
             <label class="drop" id="drop" for="receiptFile">
-              <input type="file" id="receiptFile" accept="image/*,application/pdf">
+              <input type="file" id="receiptFile" accept="image/*,application/pdf" multiple>
               <span class="drop-ico"><svg><use href="#i-upload"/></svg></span>
               <b id="dropTitle">Tap to upload your screenshot</b>
               <span id="dropHint">Image or PDF of your payment receipt</span>
             </label>
+            <ul class="file-list" id="fileList" hidden></ul>
             <button class="btn btn-gold btn-block" id="verifyBtn" type="submit" disabled><span>Check my receipt</span></button>
             <div class="verify-msg" id="verifyMsg" role="status" aria-live="polite" hidden></div>
           </form>
@@ -198,10 +199,10 @@
           <div class="unlocked" id="unlocked" hidden>
             <p class="ok-badge"><span><svg><use href="#i-check"/></svg></span>Payment confirmed</p>
             <dl class="ok-list">
-              <div><dt>Amount</dt><dd id="okAmount"></dd></div>
-              <div><dt>Transaction reference</dt><dd id="okRef"></dd></div>
+              <div><dt>Total paid</dt><dd id="okAmount"></dd></div>
+              <div class="ok-refs"><dt id="okRefLabel">Transaction reference</dt><dd id="okRef"></dd></div>
             </dl>
-            <p class="ok-note">Copy your transaction reference into the form so our team can match your payment.</p>
+            <p class="ok-note" id="okNote">Copy your transaction reference into the form so our team can match your payment.</p>
             <a class="btn btn-gold btn-block" id="formLink" href="#" target="_blank" rel="noopener"><span>Open the registration form</span><svg><use href="#i-ext"/></svg></a>
           </div>
         </li>

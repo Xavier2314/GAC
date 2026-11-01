@@ -6,8 +6,8 @@ Static website for Goal Achievers. The live page is the Event page (Senior Manag
 Visitors pay ₦100,000 into **OPay 8108229724 (Awotipe Roseline)**, then upload their receipt on the event page.
 `api/verify-receipt.js` (a Vercel serverless function) sends the receipt to Claude, which reads the amount, recipient, status and transaction reference. The registration form link is returned only when:
 
-- the file is a payment receipt with a successful status
-- the amount is ₦100,000 or more
+- every file is a payment receipt with a successful status (up to 3 receipts for people who paid in parts)
+- each receipt is a different transfer, and together they add up to ₦100,000 or more
 - the recipient account number (full or masked) or the account name matches
 - the receipt doesn't look edited
 

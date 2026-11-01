@@ -404,7 +404,7 @@
   /* ---------------- Payment receipt check ----------------
      The form link only comes back from the server after the receipt passes. */
   var fileInput = $('#receiptFile'), drop = $('#drop'), verifyBtn = $('#verifyBtn'), verifyMsg = $('#verifyMsg'), receiptForm = $('#receiptForm');
-  var chosen = null;
+  var chosen = [], MAX_FILES = 3;
   function showMsg(kind, lines) {
     verifyMsg.className = 'verify-msg ' + kind; verifyMsg.textContent = '';
     if (kind === 'busy') {
@@ -418,31 +418,57 @@
     }
     verifyMsg.hidden = false;
   }
-  function pick(file) {
-    if (!file) return;
-    var okType = /^image\//.test(file.type) || file.type === 'application/pdf';
-    if (!okType) { showMsg('bad', ['Upload an image (JPG or PNG) or a PDF of your receipt.']); return; }
-    if (file.type === 'application/pdf' && file.size > 3 * 1024 * 1024) { showMsg('bad', ['That PDF is over 3 MB. Upload a screenshot of the receipt instead.']); return; }
-    chosen = file;
-    $('#dropTitle').textContent = file.name;
-    $('#dropHint').textContent = 'Tap to choose a different file';
-    drop.classList.add('has-file'); verifyBtn.disabled = false; verifyMsg.hidden = true;
-    $('#step1').classList.add('done');
+  var fileList = $('#fileList');
+  function renderFiles() {
+    fileList.textContent = '';
+    chosen.forEach(function (f, i) {
+      var li = document.createElement('li');
+      var name = document.createElement('span'); name.className = 'fl-name'; name.textContent = (chosen.length > 1 ? 'Receipt ' + (i + 1) + ': ' : '') + f.name;
+      var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'fl-remove'; rm.textContent = 'Remove';
+      rm.setAttribute('aria-label', 'Remove ' + f.name);
+      rm.addEventListener('click', function () { chosen.splice(i, 1); renderFiles(); });
+      li.appendChild(name); li.appendChild(rm); fileList.appendChild(li);
+    });
+    fileList.hidden = !chosen.length;
+    var full = chosen.length >= MAX_FILES;
+    drop.classList.toggle('has-file', chosen.length > 0);
+    drop.classList.toggle('is-full', full);
+    fileInput.disabled = full;
+    $('#dropTitle').textContent = !chosen.length ? 'Tap to upload your screenshot' : full ? '3 screenshots added' : 'Add another screenshot';
+    $('#dropHint').textContent = !chosen.length ? 'Image or PDF of your payment receipt' : full ? 'Remove one to change it' : 'Only if you paid in parts (up to 3)';
+    verifyBtn.disabled = !chosen.length;
+    $('#verifyBtn span').textContent = chosen.length > 1 ? 'Check my ' + chosen.length + ' receipts' : 'Check my receipt';
+    if (chosen.length) $('#step1').classList.add('done');
   }
-  fileInput.addEventListener('change', function () { pick(fileInput.files[0]); });
+  function pick(files) {
+    var problems = [];
+    Array.prototype.slice.call(files || []).forEach(function (file) {
+      var okType = /^image\//.test(file.type) || file.type === 'application/pdf';
+      if (!okType) { problems.push(file.name + ': upload an image (JPG or PNG) or a PDF.'); return; }
+      if (file.type === 'application/pdf' && file.size > 3 * 1024 * 1024) { problems.push(file.name + ' is over 3 MB. Upload a screenshot of the receipt instead.'); return; }
+      var dup = chosen.some(function (c) { return c.name === file.name && c.size === file.size && c.lastModified === file.lastModified; });
+      if (dup) { problems.push(file.name + ' is already added.'); return; }
+      if (chosen.length >= MAX_FILES) { problems.push('You can add up to ' + MAX_FILES + ' screenshots.'); return; }
+      chosen.push(file);
+    });
+    fileInput.value = '';
+    renderFiles();
+    if (problems.length) showMsg('bad', problems); else verifyMsg.hidden = true;
+  }
+  fileInput.addEventListener('change', function () { pick(fileInput.files); });
   ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
   ['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
-  drop.addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files[0]) pick(e.dataTransfer.files[0]); });
+  drop.addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files.length) pick(e.dataTransfer.files); });
   function readAsBase64(file) {
     return new Promise(function (resolve, reject) { var r = new FileReader(); r.onload = function () { resolve(String(r.result).split(',')[1]); }; r.onerror = reject; r.readAsDataURL(file); });
   }
   // Shrink photos so they upload quickly and stay under the size limit.
-  function prepare(file) {
+  function prepare(file, max) {
     if (file.type === 'application/pdf') return readAsBase64(file).then(function (b) { return { file: b, mediaType: 'application/pdf' }; });
     return new Promise(function (resolve) {
       var url = URL.createObjectURL(file), img = new Image();
       img.onload = function () {
-        var max = 1800, w = img.naturalWidth, h = img.naturalHeight, k = Math.min(1, max / Math.max(w, h));
+        var w = img.naturalWidth, h = img.naturalHeight, k = Math.min(1, max / Math.max(w, h));
         var c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
         var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
         URL.revokeObjectURL(url);
@@ -454,11 +480,14 @@
   }
   receiptForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (!chosen) return;
+    if (!chosen.length) return;
     verifyBtn.disabled = true;
-    showMsg('busy', ['Checking your receipt. This takes a few seconds…']);
-    prepare(chosen).then(function (payload) {
-      return fetch('/api/verify-receipt', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+    var many = chosen.length > 1;
+    showMsg('busy', [many ? 'Checking your ' + chosen.length + ' receipts. This takes a few seconds…' : 'Checking your receipt. This takes a few seconds…']);
+    Promise.all(chosen.map(function (f) { return prepare(f, many ? 1500 : 1800); })).then(function (files) {
+      var size = files.reduce(function (n, f) { return n + f.file.length; }, 0);
+      if (size > 4200000) return { ok: false, reasons: ['Those files are too large together. Upload screenshots instead of PDFs.'] };
+      return fetch('/api/verify-receipt', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ files: files }) })
         .then(function (r) { return r.json().catch(function () { return { ok: false, reasons: ['The receipt checker is unavailable right now. Please try again shortly.'] }; }); });
     }).then(function (data) {
       if (data && data.ok && data.formUrl) {
@@ -467,7 +496,15 @@
         var okBox = $('#receiptOk'); if (okBox) okBox.hidden = false;
         $('#step2').classList.add('done'); $('#step3').classList.add('active');
         $('#okAmount').textContent = data.amount;
-        $('#okRef').textContent = data.reference;
+        var refs = data.receipts && data.receipts.length ? data.receipts : [{ amount: data.amount, reference: data.reference }];
+        var dd = $('#okRef'); dd.textContent = '';
+        if (refs.length > 1) {
+          $('#okRefLabel').textContent = 'Transaction references';
+          refs.forEach(function (x) { var line = document.createElement('span'); line.className = 'ref-line'; line.textContent = x.reference + ' (' + x.amount + ')'; dd.appendChild(line); });
+          $('#okNote').textContent = 'Copy all your transaction references into the form so our team can match your payments.';
+        } else {
+          dd.textContent = refs[0].reference;
+        }
         $('#formLink').href = data.formUrl;
         var un = $('#unlocked'); un.hidden = false;
         if (animate) gsap.from(un, { y: 20, opacity: 0, scale: 0.97, duration: 0.9, ease: 'expo.out' });

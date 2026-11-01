@@ -1,7 +1,8 @@
 // Checks a payment receipt before the registration form is shown.
-// The browser posts { file: <base64>, mediaType } here. Claude reads the
-// receipt, this function applies the rules below, and only a receipt that
-// passes gets the form link back.
+// The browser posts { files: [{ file: <base64>, mediaType }, ...] } here (up to 3,
+// for people who paid in parts). Claude reads the
+// receipts, this function applies the rules below, and only receipts that pass
+// and add up to the fee get the form link back.
 import Anthropic from "@anthropic-ai/sdk";
 
 const ACCOUNT_NUMBER = "8108229724"; // OPay
@@ -11,7 +12,8 @@ const FORM_URL =
   process.env.REGISTRATION_FORM_URL || "https://forms.gle/jy5curP7vkNFCM9dA";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"];
-const MAX_BASE64_CHARS = 4_200_000; // stays under Vercel's 4.5 MB request limit
+const MAX_BASE64_CHARS = 4_200_000; // all files together, under Vercel's 4.5 MB request limit
+const MAX_FILES = 3;
 
 const RECEIPT_SCHEMA = {
   type: "object",
@@ -102,29 +104,92 @@ function nameMatches(printed) {
   return ACCOUNT_NAME_PARTS.every((part) => name.includes(part));
 }
 
-export function decide(r) {
-  const reasons = [];
+// Problems with one receipt on its own (the amount is judged on the total).
+export function receiptProblems(r) {
   if (!r.is_payment_receipt) {
-    reasons.push("This file doesn't look like a payment receipt. Upload the receipt from your bank app.");
-    return reasons;
+    return ["This file doesn't look like a payment receipt. Upload the receipt from your bank app."];
   }
-  if (r.status !== "successful") {
-    reasons.push("The receipt doesn't show a successful transfer.");
+  const problems = [];
+  if (r.status !== "successful") problems.push("It doesn't show a successful transfer.");
+  if (!(r.amount_naira > 0)) problems.push("We couldn't read the amount. Upload a clearer screenshot.");
+  if (!accountMatches(r.recipient_account_number) && !nameMatches(r.recipient_name)) {
+    problems.push("It wasn't paid to the Goal Achievers account (OPay 8108229724, Awotipe Roseline).");
   }
-  if (!(r.amount_naira >= MIN_AMOUNT)) {
+  if (r.looks_edited) problems.push("Parts of it look edited. Upload the original receipt from your bank app.");
+  return problems;
+}
+
+function receiptKey(r) {
+  const ref = String(r.transaction_reference || "").replace(/[^a-z0-9]/gi, "").toLowerCase();
+  if (ref.length >= 6) return "ref:" + ref;
+  return "fallback:" + Math.round(r.amount_naira || 0) + "|" + String(r.transaction_date || "").replace(/\s+/g, "").toLowerCase();
+}
+
+// Checks one or more receipts together. Returns { reasons, total }.
+export function decideAll(receipts) {
+  const many = receipts.length > 1;
+  const label = (i) => (many ? `Receipt ${i + 1}: ` : "");
+  const reasons = [];
+  let total = 0;
+  const seen = new Map();
+  receipts.forEach((r, i) => {
+    const problems = receiptProblems(r);
+    if (problems.length) {
+      problems.forEach((p) => reasons.push(label(i) + p));
+      return;
+    }
+    const key = receiptKey(r);
+    if (seen.has(key)) {
+      reasons.push(`Receipt ${i + 1} is the same payment as receipt ${seen.get(key) + 1}. Each screenshot must be a different transfer.`);
+      return;
+    }
+    seen.set(key, i);
+    total += r.amount_naira;
+  });
+  if (!reasons.length && total < MIN_AMOUNT) {
     reasons.push(
-      r.amount_naira > 0
-        ? `The receipt shows ${formatNaira(r.amount_naira)}. The retreat fee is ₦100,000.`
-        : "We couldn't read the amount on the receipt. Upload a clearer screenshot."
+      many
+        ? `Your receipts add up to ${formatNaira(total)}. ${formatNaira(MIN_AMOUNT - total)} is still outstanding.`
+        : `The receipt shows ${formatNaira(total)}. The retreat fee is ₦100,000. If you paid in parts, add the other screenshots too.`
     );
   }
-  if (!accountMatches(r.recipient_account_number) && !nameMatches(r.recipient_name)) {
-    reasons.push("The payment wasn't made to the Goal Achievers account (OPay 8108229724, Awotipe Roseline).");
+  return { reasons, total };
+}
+
+// Single-receipt version, kept for the tests.
+export function decide(r) {
+  return decideAll([r]).reasons;
+}
+
+async function readReceipt({ file, mediaType }) {
+  const fileBlock =
+    mediaType === "application/pdf"
+      ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: file } }
+      : { type: "image", source: { type: "base64", media_type: mediaType, data: file } };
+  const response = await client.beta.messages.create({
+    model: "claude-opus-5-5",
+    max_tokens: 4000,
+    betas: ["server-side-fallback-2026-07-01"],
+    fallbacks: "default",
+    output_config: {
+      effort: "low",
+      format: { type: "json_schema", schema: RECEIPT_SCHEMA },
+    },
+    system: SYSTEM_PROMPT,
+    messages: [
+      {
+        role: "user",
+        content: [fileBlock, { type: "text", text: "Extract the details of this payment receipt." }],
+      },
+    ],
+  });
+  if (response.stop_reason === "refusal") return null;
+  try {
+    const text = response.content.find((b) => b.type === "text")?.text ?? "";
+    return JSON.parse(text);
+  } catch {
+    return null;
   }
-  if (r.looks_edited) {
-    reasons.push("Parts of this receipt look edited. Upload the original receipt from your bank app.");
-  }
-  return reasons;
 }
 
 export default async function handler(req, res) {
@@ -133,42 +198,22 @@ export default async function handler(req, res) {
     return json(res, 405, { ok: false, reasons: ["Use POST."] });
   }
 
-  const { file, mediaType } = req.body || {};
-  if (typeof file !== "string" || !file || !ALLOWED_TYPES.includes(mediaType)) {
-    return json(res, 400, { ok: false, reasons: ["Upload your receipt as an image (JPG or PNG) or a PDF."] });
+  const body = req.body || {};
+  const files = Array.isArray(body.files) ? body.files : body.file ? [{ file: body.file, mediaType: body.mediaType }] : [];
+  if (!files.length || files.length > MAX_FILES || files.some((f) => !f || typeof f.file !== "string" || !f.file || !ALLOWED_TYPES.includes(f.mediaType))) {
+    return json(res, 400, { ok: false, reasons: [`Upload 1 to ${MAX_FILES} receipts as images (JPG or PNG) or PDFs.`] });
   }
-  if (file.length > MAX_BASE64_CHARS) {
-    return json(res, 413, { ok: false, reasons: ["That file is too large. Upload a screenshot under 3 MB."] });
+  if (files.reduce((n, f) => n + f.file.length, 0) > MAX_BASE64_CHARS) {
+    return json(res, 413, { ok: false, reasons: ["Those files are too large together. Upload screenshots instead of PDFs."] });
   }
 
-  const fileBlock =
-    mediaType === "application/pdf"
-      ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: file } }
-      : { type: "image", source: { type: "base64", media_type: mediaType, data: file } };
-
-  let response;
+  let receipts;
   try {
-    response = await client.beta.messages.create({
-      model: "claude-opus-5-5",
-      max_tokens: 4000,
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
-      output_config: {
-        effort: "low",
-        format: { type: "json_schema", schema: RECEIPT_SCHEMA },
-      },
-      system: SYSTEM_PROMPT,
-      messages: [
-        {
-          role: "user",
-          content: [fileBlock, { type: "text", text: "Extract the details of this payment receipt." }],
-        },
-      ],
-    });
+    receipts = await Promise.all(files.map(readReceipt));
   } catch (error) {
     if (error instanceof Anthropic.BadRequestError) {
       console.error("Receipt check rejected:", error.message);
-      return json(res, 400, { ok: false, reasons: ["We couldn't open that file. Try a screenshot of the receipt instead."] });
+      return json(res, 400, { ok: false, reasons: ["We couldn't open one of those files. Try a screenshot of the receipt instead."] });
     }
     if (error instanceof Anthropic.AuthenticationError) {
       console.error("ANTHROPIC_API_KEY is missing or invalid");
@@ -182,38 +227,37 @@ export default async function handler(req, res) {
     return json(res, 503, { ok: false, reasons: ["The receipt checker is busy. Please try again in a minute."] });
   }
 
-  if (response.stop_reason === "refusal") {
-    return json(res, 422, { ok: false, reasons: ["We couldn't read that file. Try a clear screenshot of the receipt."] });
+  const unreadable = receipts.map((r, i) => (r ? -1 : i)).filter((i) => i >= 0);
+  if (unreadable.length) {
+    const which = files.length > 1 ? unreadable.map((i) => `receipt ${i + 1}`).join(" and ") : "that receipt";
+    return json(res, 422, { ok: false, reasons: [`We couldn't read ${which}. Try a clearer screenshot.`] });
   }
 
-  let receipt;
-  try {
-    const text = response.content.find((b) => b.type === "text")?.text ?? "";
-    receipt = JSON.parse(text);
-  } catch {
-    return json(res, 422, { ok: false, reasons: ["We couldn't read that receipt. Try a clearer screenshot."] });
-  }
-
-  const reasons = decide(receipt);
+  const { reasons, total } = decideAll(receipts);
   console.log(
     JSON.stringify({
       event: "receipt_check",
       passed: reasons.length === 0,
-      amount: receipt.amount_naira,
-      reference: receipt.transaction_reference,
-      sender: receipt.sender_name,
-      date: receipt.transaction_date,
+      total,
+      receipts: receipts.map((r) => ({
+        amount: r.amount_naira,
+        reference: r.transaction_reference,
+        sender: r.sender_name,
+        date: r.transaction_date,
+      })),
     })
   );
 
   if (reasons.length) {
     return json(res, 200, { ok: false, reasons });
   }
+  const references = receipts.map((r) => r.transaction_reference || "Not shown on receipt");
   return json(res, 200, {
     ok: true,
-    amount: formatNaira(receipt.amount_naira),
-    reference: receipt.transaction_reference || "Not shown on receipt",
-    sender: receipt.sender_name,
+    amount: formatNaira(total),
+    reference: references.join(", "),
+    receipts: receipts.map((r, i) => ({ amount: formatNaira(r.amount_naira), reference: references[i] })),
+    sender: receipts[0].sender_name,
     formUrl: FORM_URL,
   });
 }

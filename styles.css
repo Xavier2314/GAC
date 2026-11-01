@@ -479,3 +479,13 @@ p{margin:0}
 .step-ok{display:flex;align-items:center;gap:10px;padding:16px 18px;border-radius:18px;background:#eef8ef;border:1px solid rgba(47,138,65,.35);color:#1d6b2e;font-weight:700}
 .step-ok span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--r-green);color:#fff;flex:none}
 .step-ok svg{width:16px;height:16px}
+.file-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.file-list li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 10px 10px 14px;border-radius:14px;background:#eef6ec;border:1px solid rgba(47,138,65,.3);min-width:0}
+.fl-name{font-size:14px;font-weight:600;color:var(--on-paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.fl-remove{flex:none;min-height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--on-paper-dim);font:600 13px var(--f-body);cursor:pointer}
+.fl-remove:hover{color:var(--r-red);border-color:rgba(207,42,54,.4)}
+.drop.has-file{border-style:dashed;border-color:rgba(47,138,65,.55);background:var(--paper)}
+.drop.is-full{opacity:.6;cursor:default}
+.drop.is-full input{cursor:default}
+.ok-refs dd{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.ref-line{display:block}
