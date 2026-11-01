@@ -156,7 +156,16 @@
 
       <ol class="pay-steps">
         <li class="pstep" id="step1">
-          <div class="pstep-head"><span class="pstep-num">1</span><div><h3>Pay ₦100,000</h3><p>Transfer to this account from any bank app.</p></div></div>
+          <div class="pstep-head"><span class="pstep-num">1</span><div><h3>Pay <span id="dueHead">₦100,000</span></h3><p>Transfer to this account from any bank app.</p></div></div>
+          <div class="people" role="group" aria-labelledby="peopleLabel">
+            <span class="people-label" id="peopleLabel">How many people are you paying for?</span>
+            <div class="stepper">
+              <button type="button" class="stepper-btn" id="peopleMinus" aria-label="One person fewer">−</button>
+              <output id="peopleCount" aria-live="polite">1 person</output>
+              <button type="button" class="stepper-btn" id="peoplePlus" aria-label="One more person">+</button>
+            </div>
+            <p class="people-note" id="peopleNote">₦100,000 per person</p>
+          </div>
           <div class="bank-card" id="bankCard">
             <div class="bc-top">
               <span class="bc-label">Pay into this account</span>
@@ -168,14 +177,14 @@
             </div>
             <div class="bc-bottom">
               <div><span>Account name</span><b>Awotipe Roseline</b></div>
-              <div><span>Amount</span><b>₦100,000</b></div>
+              <div><span>Amount</span><b id="dueCard">₦100,000</b></div>
             </div>
             <span class="bc-shine" aria-hidden="true"></span>
           </div>
         </li>
 
         <li class="pstep" id="step2">
-          <div class="pstep-head"><span class="pstep-num">2</span><div><h3>Upload your payment screenshot</h3><p>Screenshot the receipt in your bank app, then upload it here. Paid in parts? Add up to 3 screenshots.</p></div></div>
+          <div class="pstep-head"><span class="pstep-num">2</span><div><h3>Upload your payment screenshot</h3><p>Screenshot the receipt in your bank app, then upload it here. Paid in parts? Add up to 6 screenshots.</p></div></div>
           <form class="upload" id="receiptForm" novalidate>
             <label class="drop" id="drop" for="receiptFile">
               <input type="file" id="receiptFile" accept="image/*,application/pdf" multiple>
@@ -202,6 +211,8 @@
               <div><dt>Total paid</dt><dd id="okAmount"></dd></div>
               <div class="ok-refs"><dt id="okRefLabel">Transaction reference</dt><dd id="okRef"></dd></div>
             </dl>
+            <p class="ok-group" id="okGroup" hidden></p>
+            <div class="ok-extra" id="okExtraBox" hidden><p id="okExtra"></p><button type="button" class="btn btn-soft btn-sm" id="recheck" hidden><span>Change number of people</span></button></div>
             <p class="ok-note" id="okNote">Copy your transaction reference into the form so our team can match your payment.</p>
             <a class="btn btn-gold btn-block" id="formLink" href="#" target="_blank" rel="noopener"><span>Open the registration form</span><svg><use href="#i-ext"/></svg></a>
           </div>

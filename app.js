@@ -404,20 +404,35 @@
   /* ---------------- Payment receipt check ----------------
      The form link only comes back from the server after the receipt passes. */
   var fileInput = $('#receiptFile'), drop = $('#drop'), verifyBtn = $('#verifyBtn'), verifyMsg = $('#verifyMsg'), receiptForm = $('#receiptForm');
-  var chosen = [], MAX_FILES = 3;
-  function showMsg(kind, lines) {
+  var chosen = [], MAX_FILES = 6;
+  function showMsg(kind, lines, heading) {
     verifyMsg.className = 'verify-msg ' + kind; verifyMsg.textContent = '';
     if (kind === 'busy') {
       var sp = document.createElement('span'); sp.className = 'spin'; verifyMsg.appendChild(sp);
       verifyMsg.appendChild(document.createTextNode(lines[0]));
     } else {
-      var headLine = document.createElement('b'); headLine.textContent = "We couldn't confirm this payment."; verifyMsg.appendChild(headLine);
+      var headLine = document.createElement('b'); headLine.textContent = heading || "We couldn't confirm this payment."; verifyMsg.appendChild(headLine);
       var ul = document.createElement('ul');
       lines.forEach(function (t) { var li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
       verifyMsg.appendChild(ul);
     }
     verifyMsg.hidden = false;
   }
+  var people = 1, MAX_PEOPLE = 10;
+  function naira(n) { return '₦' + n.toLocaleString('en-NG'); }
+  function renderPeople() {
+    var due = naira(100000 * people);
+    $('#peopleCount').textContent = people + (people === 1 ? ' person' : ' people');
+    $('#dueHead').textContent = due; $('#dueCard').textContent = due;
+    $('#peopleNote').textContent = people === 1 ? '₦100,000 per person' : '₦100,000 × ' + people + ' people = ' + due;
+    $('#peopleMinus').disabled = people <= 1; $('#peoplePlus').disabled = people >= MAX_PEOPLE;
+  }
+  $('#peopleMinus').addEventListener('click', function () { if (people > 1) { people--; renderPeople(); } });
+  $('#peoplePlus').addEventListener('click', function () { if (people < MAX_PEOPLE) { people++; renderPeople(); } });
+  renderPeople();
+  // A random id kept on this device, so re-checking your own receipt later still works.
+  var device = '';
+  try { device = localStorage.getItem('ga-device') || ''; if (!device) { device = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('ga-device', device); } } catch (e) { device = ''; }
   var fileList = $('#fileList');
   function renderFiles() {
     fileList.textContent = '';
@@ -434,8 +449,8 @@
     drop.classList.toggle('has-file', chosen.length > 0);
     drop.classList.toggle('is-full', full);
     fileInput.disabled = full;
-    $('#dropTitle').textContent = !chosen.length ? 'Tap to upload your screenshot' : full ? '3 screenshots added' : 'Add another screenshot';
-    $('#dropHint').textContent = !chosen.length ? 'Image or PDF of your payment receipt' : full ? 'Remove one to change it' : 'Only if you paid in parts (up to 3)';
+    $('#dropTitle').textContent = !chosen.length ? 'Tap to upload your screenshot' : full ? MAX_FILES + ' screenshots added' : 'Add another screenshot';
+    $('#dropHint').textContent = !chosen.length ? 'Image or PDF of your payment receipt' : full ? 'Remove one to change it' : 'Only if you paid in parts (up to 6)';
     verifyBtn.disabled = !chosen.length;
     $('#verifyBtn span').textContent = chosen.length > 1 ? 'Check my ' + chosen.length + ' receipts' : 'Check my receipt';
     if (chosen.length) $('#step1').classList.add('done');
@@ -453,7 +468,7 @@
     });
     fileInput.value = '';
     renderFiles();
-    if (problems.length) showMsg('bad', problems); else verifyMsg.hidden = true;
+    if (problems.length) showMsg('bad', problems, problems.length > 1 ? 'Some files weren\'t added.' : 'That file wasn\'t added.'); else verifyMsg.hidden = true;
   }
   fileInput.addEventListener('change', function () { pick(fileInput.files); });
   ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
@@ -478,6 +493,13 @@
       img.src = url;
     });
   }
+  // Reopen steps 1 and 2 (screenshots kept) so the payer can set the number of people.
+  $('#recheck').addEventListener('click', function () {
+    $('#unlocked').hidden = true; $('#receiptOk').hidden = true; $('#formLocked').hidden = false;
+    receiptForm.hidden = false; verifyBtn.disabled = !chosen.length;
+    $('#step2').classList.remove('done'); $('#step3').classList.remove('active');
+    scrollToEl($('#step1'));
+  });
   receiptForm.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!chosen.length) return;
@@ -487,7 +509,7 @@
     Promise.all(chosen.map(function (f) { return prepare(f, many ? 1500 : 1800); })).then(function (files) {
       var size = files.reduce(function (n, f) { return n + f.file.length; }, 0);
       if (size > 4200000) return { ok: false, reasons: ['Those files are too large together. Upload screenshots instead of PDFs.'] };
-      return fetch('/api/verify-receipt', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ files: files }) })
+      return fetch('/api/verify-receipt', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ files: files, people: people, device: device }) })
         .then(function (r) { return r.json().catch(function () { return { ok: false, reasons: ['The receipt checker is unavailable right now. Please try again shortly.'] }; }); });
     }).then(function (data) {
       if (data && data.ok && data.formUrl) {
@@ -504,6 +526,15 @@
           $('#okNote').textContent = 'Copy all your transaction references into the form so our team can match your payments.';
         } else {
           dd.textContent = refs[0].reference;
+        }
+        var grp = $('#okGroup');
+        if (data.people > 1) { grp.textContent = 'Paid for ' + data.people + ' people. Share the form with each person; everyone fills it in and adds the same transaction reference.'; grp.hidden = false; } else grp.hidden = true;
+        var ex = $('#okExtra'), exBox = $('#okExtraBox');
+        $('#recheck').hidden = !data.extraPeople;
+        exBox.hidden = !data.extra;
+        if (data.extra) {
+          ex.textContent = 'You paid ' + data.extra + ' more than the fee of ' + data.required + '. ' +
+            (data.extraPeople ? 'That covers ' + data.extraPeople + ' people. Paying for others? Change the number of people and check again. Otherwise our team will contact you about the extra.' : 'Our team will contact you about the extra amount.');
         }
         $('#formLink').href = data.formUrl;
         var un = $('#unlocked'); un.hidden = false;

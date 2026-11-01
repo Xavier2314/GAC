@@ -4,6 +4,7 @@
 // receipts, this function applies the rules below, and only receipts that pass
 // and add up to the fee get the form link back.
 import Anthropic from "@anthropic-ai/sdk";
+import { ledger } from "../lib/ledger.js";
 
 const ACCOUNT_NUMBER = "8108229724"; // OPay
 const ACCOUNT_NAME_PARTS = ["awotipe", "roseline"];
@@ -13,7 +14,8 @@ const FORM_URL =
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"];
 const MAX_BASE64_CHARS = 4_200_000; // all files together, under Vercel's 4.5 MB request limit
-const MAX_FILES = 3;
+const MAX_FILES = 6;
+const MAX_PEOPLE = 10;
 
 const RECEIPT_SCHEMA = {
   type: "object",
@@ -119,14 +121,16 @@ export function receiptProblems(r) {
   return problems;
 }
 
-function receiptKey(r) {
+export function receiptKey(r) {
   const ref = String(r.transaction_reference || "").replace(/[^a-z0-9]/gi, "").toLowerCase();
   if (ref.length >= 6) return "ref:" + ref;
   return "fallback:" + Math.round(r.amount_naira || 0) + "|" + String(r.transaction_date || "").replace(/\s+/g, "").toLowerCase();
 }
 
-// Checks one or more receipts together. Returns { reasons, total }.
-export function decideAll(receipts) {
+// Checks one or more receipts together for `people` attendees.
+// Returns { reasons, total, required, extra }.
+export function decideAll(receipts, people = 1) {
+  const required = MIN_AMOUNT * people;
   const many = receipts.length > 1;
   const label = (i) => (many ? `Receipt ${i + 1}: ` : "");
   const reasons = [];
@@ -146,19 +150,20 @@ export function decideAll(receipts) {
     seen.set(key, i);
     total += r.amount_naira;
   });
-  if (!reasons.length && total < MIN_AMOUNT) {
+  if (!reasons.length && total < required) {
+    const fee = people > 1 ? `For ${people} people the fee is ${formatNaira(required)}` : "The retreat fee is ₦100,000";
     reasons.push(
       many
-        ? `Your receipts add up to ${formatNaira(total)}. ${formatNaira(MIN_AMOUNT - total)} is still outstanding.`
-        : `The receipt shows ${formatNaira(total)}. The retreat fee is ₦100,000. If you paid in parts, add the other screenshots too.`
+        ? `Your receipts add up to ${formatNaira(total)}. ${fee}, so ${formatNaira(required - total)} is still outstanding.`
+        : `The receipt shows ${formatNaira(total)}. ${fee}. If you paid in parts, add the other screenshots too.`
     );
   }
-  return { reasons, total };
+  return { reasons, total, required, extra: Math.max(0, total - required) };
 }
 
 // Single-receipt version, kept for the tests.
 export function decide(r) {
-  return decideAll([r]).reasons;
+  return decideAll([r], 1).reasons;
 }
 
 async function readReceipt({ file, mediaType }) {
@@ -199,6 +204,8 @@ export default async function handler(req, res) {
   }
 
   const body = req.body || {};
+  const people = Math.min(MAX_PEOPLE, Math.max(1, parseInt(body.people, 10) || 1));
+  const device = typeof body.device === "string" ? body.device.slice(0, 64) : "";
   const files = Array.isArray(body.files) ? body.files : body.file ? [{ file: body.file, mediaType: body.mediaType }] : [];
   if (!files.length || files.length > MAX_FILES || files.some((f) => !f || typeof f.file !== "string" || !f.file || !ALLOWED_TYPES.includes(f.mediaType))) {
     return json(res, 400, { ok: false, reasons: [`Upload 1 to ${MAX_FILES} receipts as images (JPG or PNG) or PDFs.`] });
@@ -233,12 +240,32 @@ export default async function handler(req, res) {
     return json(res, 422, { ok: false, reasons: [`We couldn't read ${which}. Try a clearer screenshot.`] });
   }
 
-  const { reasons, total } = decideAll(receipts);
+  const { reasons, total, required, extra } = decideAll(receipts, people);
+
+  // Receipts already used by someone else (checked only when everything else passes).
+  const keys = receipts.map(receiptKey);
+  let reused = [];
+  if (!reasons.length) {
+    const found = await Promise.all(keys.map((k) => ledger.lookup(k)));
+    found.forEach((rec, i) => {
+      if (rec && rec.device !== device) {
+        const when = new Date(rec.usedAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Africa/Lagos" });
+        reused.push(i);
+        reasons.push(
+          `${files.length > 1 ? `Receipt ${i + 1}` : "This receipt"} was already used to register on ${when}. If this is your payment, contact the Goal Achievers team.`
+        );
+      }
+    });
+  }
   console.log(
     JSON.stringify({
       event: "receipt_check",
       passed: reasons.length === 0,
+      people,
       total,
+      required,
+      extra,
+      reused: reused.length > 0,
       receipts: receipts.map((r) => ({
         amount: r.amount_naira,
         reference: r.transaction_reference,
@@ -251,10 +278,24 @@ export default async function handler(req, res) {
   if (reasons.length) {
     return json(res, 200, { ok: false, reasons });
   }
+  const usedAt = new Date().toISOString();
+  await Promise.all(
+    keys.map((key, i) =>
+      ledger.record(
+        key,
+        { usedAt, device, people, amount: receipts[i].amount_naira, reference: receipts[i].transaction_reference, sender: receipts[i].sender_name },
+        true
+      )
+    )
+  );
   const references = receipts.map((r) => r.transaction_reference || "Not shown on receipt");
   return json(res, 200, {
     ok: true,
     amount: formatNaira(total),
+    people,
+    required: formatNaira(required),
+    extra: extra > 0 ? formatNaira(extra) : "",
+    extraPeople: Math.floor(total / MIN_AMOUNT) > people ? Math.floor(total / MIN_AMOUNT) : 0,
     reference: references.join(", "),
     receipts: receipts.map((r, i) => ({ amount: formatNaira(r.amount_naira), reference: references[i] })),
     sender: receipts[0].sender_name,

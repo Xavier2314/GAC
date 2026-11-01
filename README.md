@@ -6,13 +6,17 @@ Static website for Goal Achievers. The live page is the Event page (Senior Manag
 Visitors pay ₦100,000 into **OPay 8108229724 (Awotipe Roseline)**, then upload their receipt on the event page.
 `api/verify-receipt.js` (a Vercel serverless function) sends the receipt to Claude, which reads the amount, recipient, status and transaction reference. The registration form link is returned only when:
 
-- every file is a payment receipt with a successful status (up to 3 receipts for people who paid in parts)
-- each receipt is a different transfer, and together they add up to ₦100,000 or more
+- every file is a payment receipt with a successful status (up to 6 receipts for people who paid in parts)
+- each receipt is a different transfer, and together they add up to ₦100,000 × the number of people being paid for (1–10)
+- no receipt has already been used by someone else (remembered in the private `gac-receipts` Vercel Blob store; the same phone can re-check its own receipts)
+
+Overpayments still pass, and step 3 tells the visitor how much extra they paid. The extra is also recorded in the function logs.
 - the recipient account number (full or masked) or the account name matches
 - the receipt doesn't look edited
 
 ### Required Vercel settings
 - `ANTHROPIC_API_KEY`: your Anthropic API key (Vercel → Project → Settings → Environment Variables)
+- `BLOB_READ_WRITE_TOKEN`: added automatically by the `gac-receipts` Blob store. Without it the site still works but can't spot receipts reused by different people.
 - `REGISTRATION_FORM_URL` (optional): overrides the Google Form link in `api/verify-receipt.js`
 
 ### Limits
@@ -24,6 +28,7 @@ Visitors pay ₦100,000 into **OPay 8108229724 (Awotipe Roseline)**, then upload
 - `styles.css`, `app.js`: design and behaviour
 - `vendor/`: GSAP, ScrollTrigger and Lenis
 - `api/verify-receipt.js`: receipt checker
+- `lib/ledger.js`: remembers used receipts
 - `logo.webp`: Goal Achievers logo
 
 ## Run locally
