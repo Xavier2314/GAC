@@ -211,11 +211,6 @@ p{margin:0}
 .countdown div{padding:18px 6px 14px;border-radius:18px;background:var(--night);border:1px solid rgba(247,220,148,.12);text-align:center}
 .countdown b{display:block;font-family:var(--f-display);font-weight:800;font-stretch:110%;font-size:clamp(30px,4vw,48px);line-height:1;font-variant-numeric:tabular-nums;color:var(--on-ink)}
 .countdown span{display:block;margin-top:8px;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--on-ink-dim)}
-.deadline{margin-top:22px;display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;padding:18px 22px;border-radius:18px;border:1px solid rgba(207,42,54,.35);background:rgba(207,42,54,.08)}
-.deadline p{flex:1;min-width:240px;color:var(--on-ink-dim);font-size:15px}
-.deadline b{color:#ffb4b9}
-.deadline-ico{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--r-red);color:#fff;flex:none}
-.deadline-ico svg{width:20px;height:20px}
 
 /* ---------- Included ---------- */
 .included{position:relative;background:var(--paper);color:var(--on-paper);padding:130px 0;border-radius:44px 44px 0 0;margin-top:-1px}
@@ -406,3 +401,33 @@ p{margin:0}
 .step-dot{z-index:1}
 .hero > .wrap{width:100%}
 .city{min-height:80vh}
+
+/* ---------- Small screens and touch ---------- */
+.pay-grid,.take-grid,.contact-grid,.hero-grid{min-width:0}
+@media (max-width:960px){.pay-grid{grid-template-columns:minmax(0,1fr)}}
+.bc-number b{white-space:nowrap;font-size:min(42px,7.8vw)!important;letter-spacing:.03em}
+.head-row{min-width:0}
+.brand{min-width:0}
+.brand-name{min-width:0}
+@media (max-width:400px){
+  :root{--gutter-l:max(16px,env(safe-area-inset-left,0px));--gutter-r:max(16px,env(safe-area-inset-right,0px))}
+  .brand-name small{letter-spacing:.14em;font-size:9px}
+  .brand-name{font-size:15px}
+  .head-row{gap:12px}
+  .btn-lg{--h:56px;padding:0 24px;font-size:15px}
+  .hero-acct{padding:12px 12px 12px 16px;gap:8px 12px}
+  .bank-card{padding:22px 18px 20px}
+  .pay-card{padding:14px}
+  .countdown{gap:8px}
+  .countdown div{padding:14px 2px 12px}
+  .countdown span{letter-spacing:.1em;font-size:9px}
+  .marquee-track span{font-size:36px}
+}
+.foot-nav a,.foot-nav button{min-height:44px;display:inline-flex;align-items:center}
+.text-link{min-height:44px}
+@media (hover:none){
+  .card:hover{transform:none;box-shadow:none}
+  .card:hover .card-ico{transform:none}
+  .btn:hover svg{transform:none}
+  .drop:hover .drop-ico{transform:none}
+}
