@@ -21,6 +21,8 @@ Visitors pay ₦100,000 into **OPay 8108229724 (Awotipe Roseline)**, then upload
 
 ## Files
 - `index.html`: the site (Event and Contact pages; Home, About Us, Founder and Vision & Mission show a coming-soon pop-up)
+- `styles.css`, `app.js`: design and behaviour
+- `vendor/`: GSAP, ScrollTrigger and Lenis
 - `api/verify-receipt.js`: receipt checker
 - `logo.webp`: Goal Achievers logo
 
@@ -29,3 +31,6 @@ Visitors pay ₦100,000 into **OPay 8108229724 (Awotipe Roseline)**, then upload
 npm install
 npx vercel dev
 ```
+
+## Design and motion
+`styles.css` and `app.js` hold the premium design: loader, rising embers with shooting stars, split-text reveals, smooth scrolling, a parallax Abeokuta landscape, magnetic buttons and a soft cursor ring. The animation libraries (GSAP 3.12.5 with ScrollTrigger, Lenis 1.1.13) are served from `vendor/`, so the site doesn't depend on a CDN. Everything stays readable when JavaScript is off or the visitor prefers reduced motion.
