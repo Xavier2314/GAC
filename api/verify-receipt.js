@@ -1,5 +1,5 @@
 // Checks a payment receipt before the registration form is shown.
-// The browser posts { files: [{ file: <base64>, mediaType }, ...] } here (up to 3,
+// The browser posts { files: [{ file: <base64>, mediaType }, ...] } here (up to 6,
 // for people who paid in parts). Claude reads the
 // receipts, this function applies the rules below, and only receipts that pass
 // and add up to the fee get the form link back.
@@ -45,9 +45,16 @@ const RECEIPT_SCHEMA = {
       type: "string",
       description: "Transaction reference, session ID or transaction number as printed. Empty if not shown.",
     },
-    looks_edited: {
-      type: "boolean",
-      description: "True if parts of the receipt look altered, pasted over or inconsistent.",
+    edit_evidence: {
+      type: "string",
+      description:
+        "The specific visible sign that a value on the receipt was changed after the bank produced it, naming the field (for example 'the amount digits are in a different font and sit on a lighter patch'). Empty if there is none.",
+    },
+    tampering: {
+      type: "string",
+      enum: ["none", "possible", "clear"],
+      description:
+        "'clear' only when edit_evidence describes an unmistakable alteration of the amount, status, recipient, date or reference. 'possible' when something is odd but could be the bank's own layout or image quality. Otherwise 'none'.",
     },
   },
   required: [
@@ -60,7 +67,8 @@ const RECEIPT_SCHEMA = {
     "sender_name",
     "transaction_date",
     "transaction_reference",
-    "looks_edited",
+    "edit_evidence",
+    "tampering",
   ],
   additionalProperties: false,
 };
@@ -69,7 +77,9 @@ const SYSTEM_PROMPT = `You read Nigerian bank transfer receipts (OPay, Moniepoin
 Report only what is printed on the receipt. Do not guess or fill in values that are not visible.
 The amount is the transferred amount in naira as a plain number (for example "₦100,000.00" is 100000). Ignore fees and balances.
 Copy account numbers exactly as printed, including masking characters such as * or x.
-If the file is not a payment receipt, set is_payment_receipt to false and leave the other text fields empty.`;
+If the file is not a payment receipt, set is_payment_receipt to false and leave the other text fields empty.
+Tampering: assume a receipt is genuine unless you can point to a specific altered value. Receipts arrive as screenshots, photos of a screen, shared images and PDFs exported from the bank app, and each bank lays them out differently. None of the following is a sign of editing: masked account numbers, watermarks, logos or stamps, plain or unusual layouts, PDF exports, compression blur, cropping, phone status bars, low resolution, missing optional fields, a receipt that is short on detail, or a format you have not seen before.
+Report tampering only for a concrete defect in a value that matters (amount, status, recipient, date, reference): digits or letters in a different font, size, colour or baseline from the text around them, a pasted patch or box behind a value, erased or smudged areas, or two fields on the same receipt that contradict each other (for example amount in figures against amount in words). Describe it in edit_evidence. If you cannot name one, tampering is "none".`;
 
 const client = new Anthropic();
 
@@ -106,6 +116,16 @@ function nameMatches(printed) {
   return ACCOUNT_NAME_PARTS.every((part) => name.includes(part));
 }
 
+// A receipt is only blocked as edited when the reader is sure and says what was
+// changed. Anything weaker passes and is flagged in the logs and the ledger for
+// a manual look, because genuine bank PDFs and screenshots were being refused.
+export function isTampered(r) {
+  return r.tampering === "clear" && String(r.edit_evidence || "").trim().length > 0;
+}
+export function needsReview(r) {
+  return !isTampered(r) && (r.tampering === "possible" || r.tampering === "clear");
+}
+
 // Problems with one receipt on its own (the amount is judged on the total).
 export function receiptProblems(r) {
   if (!r.is_payment_receipt) {
@@ -117,7 +137,7 @@ export function receiptProblems(r) {
   if (!accountMatches(r.recipient_account_number) && !nameMatches(r.recipient_name)) {
     problems.push("It wasn't paid to the Goal Achievers account (OPay 8108229724, Awotipe Roseline).");
   }
-  if (r.looks_edited) problems.push("Parts of it look edited. Upload the original receipt from your bank app.");
+  if (isTampered(r)) problems.push("Parts of it look edited. Upload the original receipt from your bank app.");
   return problems;
 }
 
@@ -271,6 +291,9 @@ export default async function handler(req, res) {
         reference: r.transaction_reference,
         sender: r.sender_name,
         date: r.transaction_date,
+        tampering: r.tampering,
+        editEvidence: r.edit_evidence,
+        review: needsReview(r),
       })),
     })
   );
@@ -283,7 +306,7 @@ export default async function handler(req, res) {
     keys.map((key, i) =>
       ledger.record(
         key,
-        { usedAt, device, people, amount: receipts[i].amount_naira, reference: receipts[i].transaction_reference, sender: receipts[i].sender_name },
+        { usedAt, device, people, amount: receipts[i].amount_naira, reference: receipts[i].transaction_reference, sender: receipts[i].sender_name, review: needsReview(receipts[i]), editEvidence: receipts[i].edit_evidence || "" },
         true
       )
     )
