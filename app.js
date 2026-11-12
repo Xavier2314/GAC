@@ -455,12 +455,29 @@
     $('#verifyBtn span').textContent = chosen.length > 1 ? 'Check my ' + chosen.length + ' receipts' : 'Check my receipt';
     if (chosen.length) $('#step1').classList.add('done');
   }
+  // Some phones and in-app browsers report no file type, so fall back to the
+  // file name, and let anything unlabelled through to be checked by its contents.
+  function kindOf(file) {
+    var t = String(file.type || '').toLowerCase(), n = String(file.name || '').toLowerCase();
+    if (t === 'application/pdf' || /\.pdf$/.test(n)) return 'pdf';
+    if (/^image\//.test(t) || /\.(jpe?g|jfif|png|webp|gif|bmp|heic|heif|avif)$/.test(n)) return 'image';
+    return (!t || t === 'application/octet-stream') ? 'unknown' : '';
+  }
+  // Works out what a file really is from its first bytes (base64).
+  function sniff(b64) {
+    if (b64.indexOf('JVBERi0') === 0) return 'application/pdf';
+    if (b64.indexOf('/9j/') === 0) return 'image/jpeg';
+    if (b64.indexOf('iVBORw0KGgo') === 0) return 'image/png';
+    if (b64.indexOf('R0lGOD') === 0) return 'image/gif';
+    if (b64.indexOf('UklGR') === 0 && b64.slice(12, 16) === 'RUJQ') return 'image/webp';
+    return '';
+  }
   function pick(files) {
     var problems = [];
     Array.prototype.slice.call(files || []).forEach(function (file) {
-      var okType = /^image\//.test(file.type) || file.type === 'application/pdf';
-      if (!okType) { problems.push(file.name + ': upload an image (JPG or PNG) or a PDF.'); return; }
-      if (file.type === 'application/pdf' && file.size > 3 * 1024 * 1024) { problems.push(file.name + ' is over 3 MB. Upload a screenshot of the receipt instead.'); return; }
+      var kind = kindOf(file);
+      if (!kind) { problems.push(file.name + ': upload an image (JPG or PNG) or a PDF.'); return; }
+      if (kind === 'pdf' && file.size > 3 * 1024 * 1024) { problems.push(file.name + ' is over 3 MB. Upload a screenshot of the receipt instead.'); return; }
       var dup = chosen.some(function (c) { return c.name === file.name && c.size === file.size && c.lastModified === file.lastModified; });
       if (dup) { problems.push(file.name + ' is already added.'); return; }
       if (chosen.length >= MAX_FILES) { problems.push('You can add up to ' + MAX_FILES + ' screenshots.'); return; }
@@ -479,7 +496,11 @@
   }
   // Shrink photos so they upload quickly and stay under the size limit.
   function prepare(file, max) {
-    if (file.type === 'application/pdf') return readAsBase64(file).then(function (b) { return { file: b, mediaType: 'application/pdf' }; });
+    var cantOpen = { error: "We couldn't open " + (file.name || 'that file') + ' on this phone. Take a screenshot of the receipt and upload the screenshot.' };
+    function raw() {
+      return readAsBase64(file).then(function (b) { var t = sniff(b || ''); return t ? { file: b, mediaType: t } : cantOpen; }, function () { return cantOpen; });
+    }
+    if (kindOf(file) === 'pdf') return raw();
     return new Promise(function (resolve) {
       var url = URL.createObjectURL(file), img = new Image();
       img.onload = function () {
@@ -487,9 +508,11 @@
         var c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
         var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
         URL.revokeObjectURL(url);
-        resolve({ file: c.toDataURL('image/jpeg', 0.88).split(',')[1], mediaType: 'image/jpeg' });
+        var out = '';
+        try { out = c.toDataURL('image/jpeg', 0.88).split(',')[1] || ''; } catch (e) { out = ''; }
+        if (c.width && c.height && out.length > 100) resolve({ file: out, mediaType: 'image/jpeg' }); else raw().then(resolve);
       };
-      img.onerror = function () { URL.revokeObjectURL(url); readAsBase64(file).then(function (b) { resolve({ file: b, mediaType: file.type }); }); };
+      img.onerror = function () { URL.revokeObjectURL(url); raw().then(resolve); };
       img.src = url;
     });
   }
@@ -507,10 +530,18 @@
     var many = chosen.length > 1;
     showMsg('busy', [many ? 'Checking your ' + chosen.length + ' receipts. This takes a few seconds…' : 'Checking your receipt. This takes a few seconds…']);
     Promise.all(chosen.map(function (f) { return prepare(f, many ? 1500 : 1800); })).then(function (files) {
+      var bad = files.filter(function (f) { return f.error; }).map(function (f) { return f.error; });
+      if (bad.length) return { ok: false, reasons: bad };
       var size = files.reduce(function (n, f) { return n + f.file.length; }, 0);
       if (size > 4200000) return { ok: false, reasons: ['Those files are too large together. Upload screenshots instead of PDFs.'] };
       return fetch('/api/verify-receipt', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ files: files, people: people, device: device }) })
-        .then(function (r) { return r.json().catch(function () { return { ok: false, reasons: ['The receipt checker is unavailable right now. Please try again shortly.'] }; }); });
+        .then(function (r) {
+          return r.json().catch(function () {
+            if (r.status === 413) return { ok: false, reasons: ['Those files are too large together. Upload screenshots instead of PDFs.'] };
+            if (r.status === 504) return { ok: false, reasons: ['Checking took too long. Please tap the button to try again.'] };
+            return { ok: false, reasons: ['The receipt checker is unavailable right now. Please try again shortly.'] };
+          });
+        });
     }).then(function (data) {
       if (data && data.ok && data.formUrl) {
         verifyMsg.hidden = true; receiptForm.hidden = true;
