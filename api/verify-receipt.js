@@ -87,6 +87,18 @@ Report tampering only for a concrete defect in a value that matters (amount, sta
 
 const client = new Anthropic();
 
+// Works out what a file really is from its first bytes, because phones often
+// label uploads wrongly or not at all. Returns "" for anything we can't read.
+export function sniffType(base64) {
+  const b = String(base64 || "");
+  if (b.startsWith("JVBERi0")) return "application/pdf";
+  if (b.startsWith("/9j/")) return "image/jpeg";
+  if (b.startsWith("iVBORw0KGgo")) return "image/png";
+  if (b.startsWith("R0lGOD")) return "image/gif";
+  if (b.startsWith("UklGR") && b.slice(12, 16) === "RUJQ") return "image/webp";
+  return "";
+}
+
 function json(res, status, body) {
   res.status(status).setHeader("Cache-Control", "no-store");
   res.json(body);
@@ -230,11 +242,21 @@ export default async function handler(req, res) {
   const body = req.body || {};
   const people = Math.min(MAX_PEOPLE, Math.max(1, parseInt(body.people, 10) || 1));
   const device = typeof body.device === "string" ? body.device.slice(0, 64) : "";
-  const files = Array.isArray(body.files) ? body.files : body.file ? [{ file: body.file, mediaType: body.mediaType }] : [];
-  if (!files.length || files.length > MAX_FILES || files.some((f) => !f || typeof f.file !== "string" || !f.file || !ALLOWED_TYPES.includes(f.mediaType))) {
+  const sent = Array.isArray(body.files) ? body.files : body.file ? [{ file: body.file, mediaType: body.mediaType }] : [];
+  if (!sent.length || sent.length > MAX_FILES || sent.some((f) => !f || typeof f.file !== "string" || !f.file)) {
+    console.warn(JSON.stringify({ event: "receipt_rejected", why: "bad_request", count: sent.length }));
     return json(res, 400, { ok: false, reasons: [`Upload 1 to ${MAX_FILES} receipts as images (JPG or PNG) or PDFs.`] });
   }
+  // Trust the file's contents over the label the phone gave it.
+  const files = sent.map((f) => ({ file: f.file, mediaType: sniffType(f.file) }));
+  const unknown = files.map((f, i) => (ALLOWED_TYPES.includes(f.mediaType) ? -1 : i)).filter((i) => i >= 0);
+  if (unknown.length) {
+    console.warn(JSON.stringify({ event: "receipt_rejected", why: "unsupported_file", labels: unknown.map((i) => String(sent[i].mediaType || "").slice(0, 40)) }));
+    const which = files.length > 1 ? unknown.map((i) => `receipt ${i + 1}`).join(" and ") : "that file";
+    return json(res, 400, { ok: false, reasons: [`We couldn't open ${which}. Take a screenshot of the receipt and upload the screenshot.`] });
+  }
   if (files.reduce((n, f) => n + f.file.length, 0) > MAX_BASE64_CHARS) {
+    console.warn(JSON.stringify({ event: "receipt_rejected", why: "too_large" }));
     return json(res, 413, { ok: false, reasons: ["Those files are too large together. Upload screenshots instead of PDFs."] });
   }
 
@@ -261,6 +283,7 @@ export default async function handler(req, res) {
   const unreadable = receipts.map((r, i) => (r ? -1 : i)).filter((i) => i >= 0);
   if (unreadable.length) {
     const which = files.length > 1 ? unreadable.map((i) => `receipt ${i + 1}`).join(" and ") : "that receipt";
+    console.warn(JSON.stringify({ event: "receipt_rejected", why: "unreadable", receipts: unreadable.map((i) => i + 1) }));
     return json(res, 422, { ok: false, reasons: [`We couldn't read ${which}. Try a clearer screenshot.`] });
   }
 
@@ -285,6 +308,7 @@ export default async function handler(req, res) {
     JSON.stringify({
       event: "receipt_check",
       passed: reasons.length === 0,
+      reasons,
       people,
       total,
       required,
