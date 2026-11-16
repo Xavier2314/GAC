@@ -77,7 +77,7 @@ const RECEIPT_SCHEMA = {
 
 const SYSTEM_PROMPT = `You read receipts for transfers into a Nigerian bank account. The money can be sent from any bank or payment app, in Nigeria or abroad (OPay, Moniepoint, PalmPay, Kuda, GTBank, Access, Zenith, UBA, First Bank, Raenest, Grey, Chipper, LemFi, Wise and others).
 The recipient (also printed as beneficiary, receiver, "to", "sent to" or "paid to") is the person or account the money went to. The sender is who paid; a payment company sending "on behalf of" someone is the sender, never the recipient.
-Status is "successful" when the receipt says the money was sent or delivered, in whatever words the app uses (successful, success, completed, complete, sent, paid, delivered, approved, credited). Use "pending" or "failed" only when the receipt says so.
+Status is "successful" when the receipt says the money was sent or delivered, in whatever words the app uses (successful, success, completed, complete, sent, paid, delivered, approved, credited). A receipt headed "Sent to <name>", "You sent" or "Transfer receipt" is a completed transfer even when it prints no separate status line. Use "pending" or "failed" only when the receipt says so.
 Report only what is printed on the receipt. Do not guess or fill in values that are not visible.
 The amount is the transferred amount in naira as a plain number (for example "₦100,000.00" is 100000). Ignore fees and balances.
 Copy account numbers exactly as printed, including masking characters such as * or x.
