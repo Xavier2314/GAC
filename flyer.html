@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>I Will Be There · Goal Achievers</title>
+<meta name="description" content="Make your 'I will be there' flyer for the Goal Achievers Senior Managers' Retreat, 19–22 November 2026, Abeokuta.">
+<meta name="theme-color" content="#1d1714">
+<meta property="og:title" content="I will be there! · Senior Managers' Retreat 2026">
+<meta property="og:description" content="Add your photo and name, then post your flyer on your status.">
+<meta property="og:image" content="flyer-frame.webp">
+<link rel="icon" type="image/webp" href="logo.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+  :root { --night:#1d1714; --ink2:#2a221d; --line:#3b3029; --gold:#c8954a; --gold2:#e2b46d; --cream:#f6ecdf; --dim:#bba58c; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-family: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--night); color: var(--cream); min-height: 100vh; }
+  a { color: var(--gold2); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 24px max(16px, env(safe-area-inset-left)) 48px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--cream); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 14px; }
+  .brand img { width: 38px; height: 38px; border-radius: 50%; background: #fff; border: 2px solid var(--gold); object-fit: cover; }
+  .back { font-size: 14px; text-decoration: none; border: 1px solid var(--gold); border-radius: 999px; padding: 8px 14px; color: var(--cream); white-space: nowrap; }
+  h1 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: clamp(38px, 8vw, 60px); line-height: 1.02; margin-top: 28px; }
+  h1 em { color: var(--gold2); }
+  .lede { color: var(--dim); margin-top: 10px; font-size: 17px; line-height: 1.5; max-width: 560px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; margin-top: 26px; }
+  @media (min-width: 860px) { .grid { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); align-items: start; } }
+  .panel { background: var(--ink2); border: 1px solid var(--line); border-radius: 20px; padding: 20px; }
+  .step { display: flex; gap: 12px; align-items: flex-start; }
+  .step + .step { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .num { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--gold); color: var(--night); font-weight: 700; display: grid; place-items: center; font-size: 15px; }
+  .step > div { flex: 1; min-width: 0; }
+  .step h2 { font-size: 17px; font-weight: 600; }
+  .step p { color: var(--dim); font-size: 14px; margin-top: 3px; line-height: 1.45; }
+  .pick { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; border: 2px dashed var(--gold); border-radius: 14px; padding: 16px; cursor: pointer; font-weight: 600; color: var(--gold2); text-align: center; }
+  .pick input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .pick.has { border-style: solid; }
+  input[type=text] { width: 100%; margin-top: 12px; background: var(--night); border: 1px solid var(--line); border-radius: 12px; color: var(--cream); font: inherit; font-size: 17px; padding: 13px 14px; }
+  input[type=text]:focus { outline: 2px solid var(--gold); border-color: transparent; }
+  .zoom { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 14px; color: var(--dim); }
+  .zoom input { flex: 1; accent-color: var(--gold); }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; border: 0; border-radius: 999px; padding: 15px 18px; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 12px; text-decoration: none; }
+  .btn-gold { background: linear-gradient(90deg, #9a6631, #d3a25a); color: var(--night); }
+  .btn-line { background: transparent; color: var(--cream); border: 1.5px solid var(--gold); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .msg { margin-top: 12px; font-size: 14px; line-height: 1.45; color: var(--dim); min-height: 1em; }
+  .msg.bad { color: #f0a08f; }
+  .stage { position: relative; }
+  canvas#out { display: block; width: 100%; max-width: 560px; height: auto; margin: 0 auto; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,.5); touch-action: none; cursor: grab; background: #000; }
+  canvas#out.drag { cursor: grabbing; }
+  .hint { text-align: center; color: var(--dim); font-size: 13px; margin-top: 10px; }
+  .share { margin-top: 8px; font-size: 14px; color: var(--dim); line-height: 1.5; }
+  video#vid { display: none; }
+  footer { text-align: center; color: var(--dim); font-size: 13px; margin-top: 36px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="/"><img src="logo.webp" alt="">Goal Achievers</a>
+    <a class="back" href="/#event">Event page</a>
+  </header>
+
+  <h1>I will be <em>there!</em></h1>
+  <p class="lede">Make your flyer for the Senior Managers' Retreat in Abeokuta. Add your photo and name, download it, then post it on your WhatsApp status.</p>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="step">
+        <span class="num">1</span>
+        <div>
+          <h2>Add your photo</h2>
+          <p>A clear photo of your face works best.</p>
+          <label class="pick" id="pickLabel"><input type="file" id="photo" accept="image/*"><span id="pickText">Choose a photo</span></label>
+          <div class="zoom" id="zoomRow" hidden><span>Zoom</span><input type="range" id="zoom" min="1" max="3" step="0.01" value="1" aria-label="Zoom photo"></div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="num">2</span>
+        <div>
+          <h2>Type your name</h2>
+          <p>As you want it on the flyer.</p>
+          <input type="text" id="name" maxlength="32" autocomplete="name" placeholder="Your name">
+        </div>
+      </div>
+      <div class="step">
+        <span class="num">3</span>
+        <div>
+          <h2>Download and share</h2>
+          <p>Picture for your status or DP. Video is a 6-second clip for your status.</p>
+          <button class="btn btn-gold" id="dlImg" type="button" disabled>Download picture</button>
+          <button class="btn btn-line" id="dlVid" type="button" disabled>Download video</button>
+          <div class="msg" id="msg" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <canvas id="out" width="1080" height="1350" aria-label="Your flyer preview"></canvas>
+      <p class="hint" id="hint">Drag the photo to move it inside the circle.</p>
+      <p class="share hint">Share this page so others can make theirs: <a href="/flyer.html">gac-liart.vercel.app/flyer.html</a></p>
+    </div>
+  </div>
+
+  <footer>Goal Achievers · Senior Managers' Retreat · Thu 19 – Sun 22 November 2026 · Abeokuta</footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var W = 1080, H = 1350;
+  var CIRCLE = { x: 540, y: 640, r: 250 };      // photo circle in the frame
+  var NAME = { x: 540, y: 983, maxW: 720 };     // centre of the gold name bar
+  var canvas = document.getElementById('out'), ctx = canvas.getContext('2d');
+  var photoInput = document.getElementById('photo'), nameInput = document.getElementById('name');
+  var zoom = document.getElementById('zoom'), zoomRow = document.getElementById('zoomRow');
+  var dlImg = document.getElementById('dlImg'), dlVid = document.getElementById('dlVid'), msg = document.getElementById('msg');
+  var frame = new Image(), photo = null;
+  var view = { scale: 1, dx: 0, dy: 0 }; // dx/dy: photo offset from circle centre, in canvas px
+
+  function say(text, bad) { msg.textContent = text || ''; msg.className = 'msg' + (bad ? ' bad' : ''); }
+
+  // Base scale makes the photo just cover the circle.
+  function baseScale() { return (CIRCLE.r * 2) / Math.min(photo.width, photo.height); }
+  function clampView() {
+    if (!photo) return;
+    var s = baseScale() * view.scale, hw = photo.width * s / 2, hh = photo.height * s / 2;
+    var mx = Math.max(0, hw - CIRCLE.r), my = Math.max(0, hh - CIRCLE.r);
+    view.dx = Math.max(-mx, Math.min(mx, view.dx));
+    view.dy = Math.max(-my, Math.min(my, view.dy));
+  }
+
+  // Draws the full flyer onto any 1080x1350 context, with an optional zoom for the video.
+  function draw(c, k) {
+    k = k || 1;
+    c.save();
+    c.fillStyle = '#1d1714'; c.fillRect(0, 0, W, H);
+    if (k !== 1) { c.translate(W / 2, H / 2); c.scale(k, k); c.translate(-W / 2, -H / 2); }
+    if (photo) {
+      var s = baseScale() * view.scale, w = photo.width * s, h = photo.height * s;
+      c.save();
+      c.beginPath(); c.arc(CIRCLE.x, CIRCLE.y, CIRCLE.r + 2, 0, Math.PI * 2); c.clip();
+      c.drawImage(photo, CIRCLE.x + view.dx - w / 2, CIRCLE.y + view.dy - h / 2, w, h);
+      c.restore();
+    } else {
+      c.fillStyle = '#efe6da'; c.beginPath(); c.arc(CIRCLE.x, CIRCLE.y, CIRCLE.r, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#8a7a6a'; c.font = '500 26px Figtree, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText('YOUR PHOTO', CIRCLE.x, CIRCLE.y);
+    }
+    if (frame.complete && frame.naturalWidth) c.drawImage(frame, 0, 0, W, H);
+    var name = (nameInput.value || '').trim() || 'Your Name';
+    c.fillStyle = '#1d1714'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    var size = 46;
+    do { c.font = '700 ' + size + 'px Figtree, sans-serif'; size -= 2; } while (c.measureText(name).width > NAME.maxW && size > 22);
+    c.fillText(name, NAME.x, NAME.y + 2);
+    c.restore();
+  }
+  function render() { draw(ctx, 1); }
+  function ready() { return Boolean(photo) && nameInput.value.trim().length > 0; }
+  function refreshButtons() {
+    dlImg.disabled = dlVid.disabled = !ready();
+    if (!photo) say('Add your photo to start.');
+    else if (!nameInput.value.trim()) say('Now type your name.');
+    else say('');
+  }
+
+  frame.onload = render;
+  frame.src = 'flyer-frame.webp';
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
+
+  photoInput.addEventListener('change', function () {
+    var file = photoInput.files && photoInput.files[0];
+    if (!file) return;
+    var url = URL.createObjectURL(file), img = new Image();
+    img.onload = function () {
+      photo = img;
+      // Portrait photos usually show the whole person, so start closer in on the
+      // top of the picture, where the face usually is.
+      var portrait = img.height > img.width * 1.1;
+      view = { scale: portrait ? 1.5 : 1, dx: 0, dy: 0 };
+      if (portrait) { var h = img.height * baseScale() * view.scale; view.dy = (h / 2 - CIRCLE.r) - h * 0.12; }
+      clampView();
+      zoom.value = view.scale; zoomRow.hidden = false;
+      document.getElementById('pickLabel').classList.add('has');
+      document.getElementById('pickText').textContent = 'Change photo';
+      render(); refreshButtons();
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); say("We couldn't open that photo. Try a JPG or PNG, or take a screenshot of it.", true); };
+    img.src = url;
+  });
+  nameInput.addEventListener('input', function () { render(); refreshButtons(); });
+  zoom.addEventListener('input', function () { view.scale = parseFloat(zoom.value) || 1; clampView(); render(); });
+
+  // Drag the photo inside the circle (mouse and touch).
+  var drag = null;
+  function toCanvas(e) { var r = canvas.getBoundingClientRect(); return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height }; }
+  canvas.addEventListener('pointerdown', function (e) {
+    if (!photo) return;
+    var p = toCanvas(e); drag = { x: p.x, y: p.y, dx: view.dx, dy: view.dy };
+    canvas.setPointerCapture(e.pointerId); canvas.classList.add('drag');
+  });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    var p = toCanvas(e); view.dx = drag.dx + (p.x - drag.x); view.dy = drag.dy + (p.y - drag.y);
+    clampView(); render();
+  });
+  function endDrag() { drag = null; canvas.classList.remove('drag'); }
+  canvas.addEventListener('pointerup', endDrag); canvas.addEventListener('pointercancel', endDrag);
+
+  function fileName(ext) {
+    var n = nameInput.value.trim().replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'my';
+    return 'I-Will-Be-There-' + n + '.' + ext;
+  }
+  function save(blob, name) {
+    var url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+  }
+  // Uses the phone's share sheet where it can share files (handy for WhatsApp), else downloads.
+  function deliver(blob, name, type) {
+    var file = null;
+    try { file = new File([blob], name, { type: type }); } catch (e) { file = null; }
+    if (file && navigator.canShare && navigator.canShare({ files: [file] }) && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      return navigator.share({ files: [file], title: 'I will be there!' }).catch(function (err) {
+        if (!err || err.name !== 'AbortError') save(blob, name);
+      });
+    }
+    save(blob, name);
+    return Promise.resolve();
+  }
+
+  dlImg.addEventListener('click', function () {
+    if (!ready()) return;
+    render();
+    canvas.toBlob(function (blob) {
+      if (!blob) { say("Sorry, your phone couldn't make the picture. Take a screenshot of the preview instead.", true); return; }
+      deliver(blob, fileName('jpg'), 'image/jpeg').then(function () { say('Done. Post it on your status and tag Goal Achievers.'); });
+    }, 'image/jpeg', 0.92);
+  });
+
+  // Video: records a 6-second fade-in and slow zoom of the flyer in the browser.
+  function videoType() {
+    if (!window.MediaRecorder || !canvas.captureStream) return null;
+    var types = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
+    for (var i = 0; i < types.length; i++) { if (MediaRecorder.isTypeSupported(types[i])) return types[i]; }
+    return null;
+  }
+  dlVid.addEventListener('click', function () {
+    if (!ready()) return;
+    var type = videoType();
+    if (!type) { say("This browser can't make videos. Download the picture instead, or open this page in Chrome.", true); return; }
+    var rec = document.createElement('canvas'); rec.width = W; rec.height = H;
+    var rc = rec.getContext('2d');
+    var stream = rec.captureStream(30), chunks = [];
+    var mr;
+    try { mr = new MediaRecorder(stream, { mimeType: type, videoBitsPerSecond: 6000000 }); }
+    catch (e) { say("This browser can't make videos. Download the picture instead.", true); return; }
+    dlImg.disabled = dlVid.disabled = true;
+    say('Making your video… this takes about 6 seconds. Keep this page open.');
+    mr.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+    mr.onstop = function () {
+      var isMp4 = type.indexOf('mp4') === 0;
+      var blob = new Blob(chunks, { type: isMp4 ? 'video/mp4' : 'video/webm' });
+      refreshButtons();
+      if (!blob.size) { say("Sorry, the video didn't record. Download the picture instead.", true); return; }
+      deliver(blob, fileName(isMp4 ? 'mp4' : 'webm'), blob.type).then(function () {
+        say(isMp4 ? 'Done. Post the video on your status.' : 'Done. If WhatsApp won\'t take this video, post the picture instead.');
+      });
+    };
+    var start = performance.now(), DUR = 6000;
+    function tick(now) {
+      var t = Math.min(1, (now - start) / DUR);
+      draw(rc, 1 + 0.06 * t);
+      var fade = Math.max(0, 1 - (now - start) / 600);
+      if (fade > 0) { rc.fillStyle = 'rgba(0,0,0,' + fade + ')'; rc.fillRect(0, 0, W, H); }
+      if (t < 1) requestAnimationFrame(tick); else setTimeout(function () { mr.stop(); }, 120);
+    }
+    draw(rc, 1);
+    mr.start(250);
+    requestAnimationFrame(tick);
+  });
+
+  render(); refreshButtons();
+})();
+</script>
+</body>
+</html>

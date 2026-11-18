@@ -23,7 +23,11 @@ Overpayments still pass, and step 3 tells the visitor how much extra they paid. 
 - A receipt screenshot can be faked. Each check is logged in the Vercel function logs (amount, reference, sender, date), so cross-check references against the OPay statement before confirming a seat.
 - Anyone who already has the Google Form link can still open it directly. Add a required "Transaction reference" question to the form and only accept entries whose reference appears in the OPay statement.
 
+## "I will be there" flyer
+`flyer.html` lets anyone make their own flyer: they add a photo, type their name, then download a picture (JPG) or a 6-second video. Everything happens in the visitor's browser and nothing is uploaded or stored. The design comes from `flyer-frame.webp`, which has a see-through circle for the photo and an empty gold bar for the name. The video is MP4 where the browser can record MP4 and WebM otherwise.
+
 ## Files
+- `flyer.html`, `flyer-frame.webp`: the "I will be there" flyer maker
 - `index.html`: the site (Event and Contact pages; Home, About Us, Founder and Vision & Mission show a coming-soon pop-up)
 - `styles.css`, `app.js`: design and behaviour
 - `vendor/`: GSAP, ScrollTrigger and Lenis
