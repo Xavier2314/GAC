@@ -7,7 +7,9 @@ import Anthropic from "@anthropic-ai/sdk";
 import { ledger } from "../lib/ledger.js";
 
 const ACCOUNT_NUMBER = "8108229724"; // OPay
-const ACCOUNT_NAME_PARTS = ["awotipe", "roseline"];
+// The receiver's first name is enough: banks and payment apps shorten, reorder
+// or drop the surname, and some print no account number at all.
+const ACCOUNT_NAME = "roseline";
 const MIN_AMOUNT = 100000; // naira
 const FORM_URL =
   process.env.REGISTRATION_FORM_URL || "https://forms.gle/jy5curP7vkNFCM9dA";
@@ -73,7 +75,9 @@ const RECEIPT_SCHEMA = {
   additionalProperties: false,
 };
 
-const SYSTEM_PROMPT = `You read Nigerian bank transfer receipts (OPay, Moniepoint, PalmPay, Kuda, GTBank and other banks).
+const SYSTEM_PROMPT = `You read receipts for transfers into a Nigerian bank account. The money can be sent from any bank or payment app, in Nigeria or abroad (OPay, Moniepoint, PalmPay, Kuda, GTBank, Access, Zenith, UBA, First Bank, Raenest, Grey, Chipper, LemFi, Wise and others).
+The recipient (also printed as beneficiary, receiver, "to", "sent to" or "paid to") is the person or account the money went to. The sender is who paid; a payment company sending "on behalf of" someone is the sender, never the recipient.
+Status is "successful" when the receipt says the money was sent or delivered, in whatever words the app uses (successful, success, completed, complete, sent, paid, delivered, approved, credited). A receipt headed "Sent to <name>", "You sent" or "Transfer receipt" is a completed transfer even when it prints no separate status line. Use "pending" or "failed" only when the receipt says so.
 Report only what is printed on the receipt. Do not guess or fill in values that are not visible.
 The amount is the transferred amount in naira as a plain number (for example "₦100,000.00" is 100000). Ignore fees and balances.
 Copy account numbers exactly as printed, including masking characters such as * or x.
@@ -105,7 +109,7 @@ function formatNaira(n) {
 }
 
 // Accepts the full number, or a masked one like 810****724 / ******9724.
-function accountMatches(printed) {
+export function accountMatches(printed) {
   const cleaned = String(printed || "").replace(/[^0-9*xX•]/g, "");
   if (!cleaned) return false;
   if (cleaned === ACCOUNT_NUMBER) return true;
@@ -123,9 +127,9 @@ function accountMatches(printed) {
   return Boolean(tail && tail[0].length >= 4 && ACCOUNT_NUMBER.endsWith(tail[0].split("").reverse().join("")));
 }
 
-function nameMatches(printed) {
-  const name = String(printed || "").toLowerCase();
-  return ACCOUNT_NAME_PARTS.every((part) => name.includes(part));
+export function nameMatches(printed) {
+  const name = String(printed || "").toLowerCase().replace(/[^a-z]/g, "");
+  return name.includes(ACCOUNT_NAME);
 }
 
 // A receipt is only blocked as edited when the reader is sure and says what was
@@ -310,8 +314,13 @@ export default async function handler(req, res) {
       required,
       extra,
       reused: reused.length > 0,
+      reasons,
       receipts: receipts.map((r) => ({
         amount: r.amount_naira,
+        status: r.status,
+        recipient: r.recipient_name,
+        recipientAccount: r.recipient_account_number,
+        recipientBank: r.recipient_bank,
         reference: r.transaction_reference,
         sender: r.sender_name,
         date: r.transaction_date,

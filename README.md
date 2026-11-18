@@ -11,7 +11,7 @@ Visitors pay ₦100,000 into **OPay 8108229724 (Awotipe Roseline)**, then upload
 - no receipt has already been used by someone else (remembered in the private `gac-receipts` Vercel Blob store; the same phone can re-check its own receipts)
 
 Overpayments still pass, and step 3 tells the visitor how much extra they paid. The extra is also recorded in the function logs.
-- the recipient account number (full or masked) or the account name matches
+- the recipient account number (full or masked) matches, or the receiver's name contains "Roseline". The sending bank or app doesn't matter
 - the receipt isn't clearly edited. It is refused only when the checker is certain and can name what was changed; weaker doubts pass and are marked `review: true` in the function logs and the Blob record so you can check them against the OPay statement
 
 ### Required Vercel settings
